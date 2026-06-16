@@ -165,7 +165,7 @@ footer b{color:var(--ink-soft)}
   <header>
     <div class="headrow">
       <div>
-        <div class="brand">GBfoods · Europe — <b>Modelo de Innovación 2.0</b></div>
+        <div class="brand">GBfoods · Europe — <b>Innovation Model 2.0</b></div>
         <h1>Innovation Hurdle Calculator</h1>
         <div class="sub">Tier classification and hurdle rates for each project.</div>
       </div>
@@ -234,10 +234,9 @@ footer b{color:var(--ink-soft)}
         <div class="sec" id="skuResultSec" style="display:none">
           <p class="eyebrow">SKU Result</p>
           <div class="cap">
-            <div class="lab">Apply cap to per-SKU hurdles
-              <small id="capDesc">Techo = Silver Transformacional · MIN() · propuesta, no en v25R</small>
+            <div class="lab">NS hurdle (floored &amp; capped)
+              <small id="capDesc"></small>
             </div>
-            <label class="switch"><input type="checkbox" id="capToggle"><span class="slider"></span></label>
           </div>
           <table class="skut" id="skut"><tbody></tbody></table>
           <div class="binding" id="binding"></div>
@@ -250,9 +249,10 @@ footer b{color:var(--ink-soft)}
 
         <div class="sec">
           <div class="actions">
-            <button class="btn primary" id="copyBtn" type="button">Copy summary</button>
+            <button class="btn primary" id="exportBtn" type="button">⬇ Export image</button>
+            <button class="btn ghost" id="copyBtn" type="button">Copy summary</button>
             <button class="btn ghost" id="resetBtn" type="button">Reset to example</button>
-            <span class="toast" id="toast">Copiado ✓</span>
+            <span class="toast" id="toast">Done ✓</span>
           </div>
         </div>
       </div>
@@ -280,9 +280,9 @@ function rule(pt,pd,tier){ return DATA.rules.find(r=>r.ptype===pt&&r.pdetail===p
 function clusterOf(pt,pd){ const r=DATA.rules.find(x=>x.ptype===pt&&x.pdetail===pd); return r?r.cluster:'—'; }
 function refOf(family,bu){ return DATA.ref[family+'||'+bu] || {n:0,med5:0,med10:0,gm:null}; }
 
-const EX = { bu:"Spain Foodservice", platform:"Broth", family:"Added value liquid bouillon",
-  ptype:"Extensions", pdetail:"New range", nsTotal:4000, nsInc:0, gmPct:50, gmImpact:0,
-  incNM:0, rdRoi:4.9, capexPos:true, skus:[4000], cap:false };
+const EX = { bu:"Belgium", platform:"Noodles", family:"Noodles",
+  ptype:"Extensions", pdetail:"Line Extensions (incl. In & Out)", nsTotal:900, nsInc:0, gmPct:47, gmImpact:0,
+  incNM:0, rdRoi:5, capexPos:true, skus:[900,800,700] };
 let S = structuredClone(EX);
 
 function ctxOf(){
@@ -294,10 +294,17 @@ function ctxOf(){
   const skusN = S.skus.filter(x=>typeof x==='number'&&x>0);
   const multi = (S.ptype==='Extensions' && skusN.length>0);
   const effNS = multi ? Math.min(...skusN) : (S.nsTotal||0);
+  // NS caps for Extensions (Excel _Helpers L40/L41, M40/M41). Always applied.
+  const silverCap = buTier==='TIER1'?1000:500;
+  const bronzeCap = buTier==='TIER1'?500:300;
+  // Effective Extensions hurdles = MIN(MAX(floor, median), cap)  (Excel L46/L47)
+  const silverHurdle = Math.min(Math.max(fl.silver, r.med5), silverCap);
+  const bronzeHurdle = Math.min(Math.max(fl.bronze, r.med10), bronzeCap);
   return {buTier,fl,r,familyGM,gmThreshold,multi,effNS,
     nsInc:S.nsInc||0, gmPct:(S.gmPct||0)/100, gmImpact:S.gmImpact||0,
     incNM:S.incNM||0, rdRoi:S.rdRoi||0, capexPos:!!S.capexPos,
-    med5:r.med5, med10:r.med10};
+    med5:r.med5, med10:r.med10,
+    silverCap, bronzeCap, silverHurdle, bronzeHurdle};
 }
 function evNS(row,c){
   if(!row||!row.avail) return {text:'',status:'na'};
@@ -305,8 +312,8 @@ function evNS(row,c){
   switch(row.nsRule){
     case 'FIXED_TIER1': return {text:'≥ '+k(thr), status:c.effNS>=thr?'pass':'fail'};
     case 'INCREMENTAL_TIER1': return {text:'Inc ≥ '+k(thr), status:c.nsInc>=thr?'pass':'fail'};
-    case 'MEDIAN_TOP5_SUBFAMILY':{const h=Math.max(c.fl.silver,c.med5);return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
-    case 'TOP5_GBF_CATEGORY':{const h=Math.max(c.fl.bronze,c.med10);return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
+    case 'MEDIAN_TOP5_SUBFAMILY':{const h=c.silverHurdle;return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
+    case 'TOP5_GBF_CATEGORY':{const h=c.bronzeHurdle;return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
     case 'DO_NOTHING': return {text:'Inc > Do Nothing', status:c.nsInc>0?'pass':'fail'};
     case 'NO_INCREMENTALITY': return {text:'No incrementality', status:'none'};
     default: return {text:'—',status:'none'};
@@ -366,8 +373,8 @@ function nsHurdleFor(tier,c){
   const thr=c.buTier==='TIER1'?row.nsT1:row.nsT2;
   switch(row.nsRule){
     case 'FIXED_TIER1': case 'INCREMENTAL_TIER1': return thr;
-    case 'MEDIAN_TOP5_SUBFAMILY': return Math.max(c.fl.silver,c.med5);
-    case 'TOP5_GBF_CATEGORY': return Math.max(c.fl.bronze,c.med10);
+    case 'MEDIAN_TOP5_SUBFAMILY': return c.silverHurdle;
+    case 'TOP5_GBF_CATEGORY': return c.bronzeHurdle;
     case 'DO_NOTHING': return 0;
     default: return null;
   }
@@ -441,8 +448,10 @@ function render(){
     ['# SKUs Family-BU', r.n>0?nf.format(r.n):['no data',true]],
     ['Top-5 NS Median', r.med5>0?k(r.med5):['—',true]],
     ['Top-10 NS Median', r.med10>0?k(r.med10):['—',true]],
-    ['Floor Silver (tier)', k(c.fl.silver)],
-    ['Floor Bronze (tier)', k(c.fl.bronze)],
+    ['Floor Silver / Bronze', k(c.fl.silver)+' / '+k(c.fl.bronze)],
+    ['Cap Silver / Bronze', k(c.silverCap)+' / '+k(c.bronzeCap)],
+    ['Eff. Silver hurdle (Ext.)', k(c.silverHurdle)],
+    ['Eff. Bronze hurdle (Ext.)', k(c.bronzeHurdle)],
     ['Applicable GM Threshold', pf(c.gmThreshold)],
   ];
   $('refs').innerHTML=refRows.map(([key,val])=>{
@@ -453,11 +462,8 @@ function render(){
   const isExt=(S.ptype==='Extensions');
   $('skuResultSec').style.display = isExt ? '' : 'none';
   if(isExt){
-    $('capToggle').checked=!!S.cap;
-    const cap = c.buTier==='TIER1'?2000:1000;
-    $('capDesc').textContent='Cap = Transformational Silver ('+k(cap)+') \xb7 MIN() \xb7 proposal, not in v25R';
+    $('capDesc').textContent='Hurdle = MIN( MAX(floor, median), cap ). Silver cap '+k(c.silverCap)+' / Bronze cap '+k(c.bronzeCap)+' (v25R).';
     let Ts=nsHurdleFor('SILVER',c), Tb=nsHurdleFor('BRONZE',c);
-    if(S.cap){ if(Ts!=null)Ts=Math.min(Ts,cap); if(Tb!=null)Tb=Math.min(Tb,cap); }
     const skusN=S.skus.map((x,idx)=>({i:idx+1,ns:x})).filter(o=>typeof o.ns==='number'&&o.ns>0);
     let rows='', worst=null, ORD={'NO TIER':0,'BRONZE':1,'SILVER':2,'GOLD':3};
     skusN.forEach(o=>{
@@ -560,10 +566,101 @@ function init(){
   $('capYes').addEventListener('click',()=>{S.capexPos=true;syncInputs();render();});
   $('capNo').addEventListener('click',()=>{S.capexPos=false;syncInputs();render();});
   $('addSku').addEventListener('click',()=>{S.skus.push(null);renderSkuInputs();render();});
-  $('capToggle').addEventListener('change',e=>{S.cap=e.target.checked;render();});
   $('resetBtn').addEventListener('click',()=>{S=structuredClone(EX);fill($('bu'),DATA.buList,S.bu);fill($('platform'),DATA.platList,S.platform);fill($('ptype'),ptypes(),S.ptype);refreshFamily();refreshDetail();renderSkuInputs();syncInputs();render();});
   $('copyBtn').addEventListener('click',copySummary);
+  $('exportBtn').addEventListener('click',exportImage);
   render();
+}
+
+/* ---------- one-pager image export (offline, pure Canvas) ---------- */
+function exportData(c){
+  const tiers={GOLD:tierResult('GOLD',c),SILVER:tierResult('SILVER',c),BRONZE:tierResult('BRONZE',c)};
+  let best='NO TIER'; for(const t of ['GOLD','SILVER','BRONZE']) if(tiers[t].achieved){best=t;break;}
+  // Display tier (Excel K6 fallback): achieved tier, else lowest available (Bronze>Silver>Gold)
+  const disp = best!=='NO TIER' ? best : (tiers.BRONZE.avail?'BRONZE':tiers.SILVER.avail?'SILVER':tiers.GOLD.avail?'GOLD':null);
+  const availRows=['GOLD','SILVER','BRONZE'].map(t=>rule(S.ptype,S.pdetail,t)).filter(r=>r&&r.avail);
+  const incMode = availRows.some(r=>r.nsRule==='INCREMENTAL_TIER1'||r.nsRule==='DO_NOTHING');
+  const gmImpactMode = availRows.some(r=>r.gmRule==='GT_60K'||r.gmRule==='LT_60K');
+  const nsVal = c.multi ? k(c.effNS)+' (worst SKU)' : (incMode ? k(c.nsInc)+' (inc)' : k(S.nsTotal||0));
+  const gmVal = gmImpactMode ? nf.format(c.gmImpact)+' €' : pf(c.gmPct);
+  const vals=[nsVal, gmVal, k(c.incNM)+' (Inc NM Y1)', (Math.round(c.rdRoi*10)/10)+'x', c.capexPos?'Pos ROI':'Neg ROI'];
+  const labels=['NS Y3','GM%','A&P','R&D ROI','CAPEX'];
+  const cells = disp ? tiers[disp].cells : CRITS.map(()=>({text:'—',status:'na'}));
+  return {best,disp,vals,labels,cells};
+}
+function exportImage(){
+  const c=ctxOf();
+  const d=exportData(c);
+  const COL={pass:{bg:'#E3F2E9',fg:'#1E7A52',pill:'PASS'},fail:{bg:'#FBE9E7',fg:'#C0392B',pill:'FAIL'},
+             none:{bg:'#F0F2F5',fg:'#8A93A3',pill:'—'},na:{bg:'#F0F2F5',fg:'#8A93A3',pill:'N.A.'}};
+  const RANKCOL={GOLD:'#B8860B',SILVER:'#6B7689',BRONZE:'#9C6B3F','NO TIER':'#C0392B'};
+  const MED={GOLD:'🥇',SILVER:'🥈',BRONZE:'🥉','NO TIER':'⛔'};
+  const W=1180,H=440,P=44,sc=2;
+  const cv=document.createElement('canvas'); cv.width=W*sc; cv.height=H*sc;
+  const x=cv.getContext('2d'); x.scale(sc,sc);
+  const rr=(X,Y,w,h,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();};
+  const fit=(t,max,start)=>{let s=start;x.font='700 '+s+'px '+SANS;while(x.measureText(t).width>max&&s>9){s--;x.font='700 '+s+'px '+SANS;}return s;};
+  const SANS='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+  // background
+  x.fillStyle='#FFFFFF';x.fillRect(0,0,W,H);
+  x.fillStyle='#0B1F3A';x.fillRect(0,0,W,6);
+  // header text
+  x.textBaseline='alphabetic';
+  x.fillStyle='#8A93A3';x.font='700 12px '+SANS;
+  x.fillText('GBFOODS · EUROPE — INNOVATION HURDLE CALCULATOR',P,P+6);
+  x.fillStyle='#0B1F3A';x.font='800 26px '+SANS;
+  x.fillText(`${S.bu} · ${S.platform} · ${S.family}`,P,P+38);
+  x.fillStyle='#55617A';x.font='600 15px '+SANS;
+  x.fillText(`${S.ptype} / ${S.pdetail}  ·  ${clusterOf(S.ptype,S.pdetail)}`,P,P+62);
+  // rank badge (top-right)
+  const bw=250,bh=70,bx=W-P-bw,by=P-6;
+  x.fillStyle=RANKCOL[d.best]; rr(bx,by,bw,bh,12); x.fill();
+  x.fillStyle='#FFFFFF';x.font='700 12px '+SANS;x.textAlign='left';
+  x.fillText('BEST TIER ACHIEVED',bx+18,by+26);
+  x.font='800 30px '+SANS;
+  x.fillText(`${MED[d.best]} ${d.best}`,bx+18,by+56);
+  x.textAlign='left';
+  // criterion cards
+  const top=P+92, gap=16, n=5;
+  const cw=(W-2*P-gap*(n-1))/n, ch=210;
+  for(let i=0;i<n;i++){
+    const cell=d.cells[i]; const col=COL[cell.status]||COL.none;
+    const cx=P+i*(cw+gap);
+    x.fillStyle=col.bg; rr(cx,top,cw,ch,12); x.fill();
+    x.strokeStyle='rgba(11,31,58,.08)';x.lineWidth=1; rr(cx,top,cw,ch,12); x.stroke();
+    // label
+    x.fillStyle='#16233A';x.font='800 16px '+SANS;x.textAlign='center';
+    x.fillText(d.labels[i],cx+cw/2,top+30);
+    // divider
+    x.strokeStyle='rgba(11,31,58,.10)';x.beginPath();x.moveTo(cx+16,top+44);x.lineTo(cx+cw-16,top+44);x.stroke();
+    // hurdle
+    x.fillStyle='#8A93A3';x.font='700 11px '+SANS;
+    x.fillText('HURDLE',cx+cw/2,top+66);
+    x.fillStyle='#55617A';let hs=fit(cell.text||'—',cw-20,13);x.font='600 '+hs+'px '+SANS;
+    x.fillText(cell.text||'—',cx+cw/2,top+86);
+    // project value
+    x.fillStyle='#8A93A3';x.font='700 11px '+SANS;
+    x.fillText('PROJECT',cx+cw/2,top+120);
+    x.fillStyle='#16233A';let vs=fit(d.vals[i],cw-20,17);x.font='800 '+vs+'px '+SANS;
+    x.fillText(d.vals[i],cx+cw/2,top+144);
+    // status pill
+    const pw=78,ph=26,px=cx+cw/2-pw/2,py=top+162;
+    x.fillStyle=col.fg; rr(px,py,pw,ph,13); x.fill();
+    x.fillStyle='#FFFFFF';x.font='800 12px '+SANS;x.fillText(col.pill,cx+cw/2,py+17);
+    x.textAlign='left';
+  }
+  // footer
+  x.fillStyle='#8A93A3';x.font='500 11px '+SANS;x.textAlign='left';
+  const stamp=new Date().toISOString().slice(0,10);
+  x.fillText(`Generated ${stamp} · References from v25R (Family-BU). Internal governance tool — sensitive budgetary data.`,P,H-26);
+  // download
+  const safe=s=>String(s).replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_');
+  cv.toBlob(b=>{
+    const u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u; a.download=`Hurdle_${safe(S.bu)}_${safe(S.family)}_${safe(d.best)}.png`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+    const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);
+  },'image/png');
 }
 function copySummary(){
   const c=ctxOf();
