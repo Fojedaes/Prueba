@@ -250,6 +250,7 @@ footer b{color:var(--ink-soft)}
         <div class="sec">
           <div class="actions">
             <button class="btn primary" id="exportBtn" type="button">⬇ Export image</button>
+            <button class="btn ghost" id="exportMatrixBtn" type="button">⬇ Export hurdle matrix</button>
             <button class="btn ghost" id="copyBtn" type="button">Copy summary</button>
             <button class="btn ghost" id="resetBtn" type="button">Reset to example</button>
             <span class="toast" id="toast">Done ✓</span>
@@ -260,7 +261,7 @@ footer b{color:var(--ink-soft)}
   </div>
 
   <footer>
-    <b>About the data.</b> The app does not include SKU-level data: only aggregated references per Family-BU from <b>v25R</b> (family GM%, top-5 and top-10 NS median, number of SKUs). The NS benchmark is calculated at <b>Family-BU</b> level (not sub-family), matching the actual Excel formulas, even though the internal nomenclature says "subfamily".<br>
+    <b>About the data.</b> The app does not include SKU-level data: only aggregated references per Family-BU from <b>v25R</b> (family GM%, top-5 and top-10 NS median, number of SKUs). The NS benchmark is calculated at <b>Family-BU</b> level (not sub-family).<br>
     Internal governance tool; does not constitute financial advice. Reference figures remain sensitive budgetary data.
   </footer>
 </div>
@@ -569,6 +570,7 @@ function init(){
   $('resetBtn').addEventListener('click',()=>{S=structuredClone(EX);fill($('bu'),DATA.buList,S.bu);fill($('platform'),DATA.platList,S.platform);fill($('ptype'),ptypes(),S.ptype);refreshFamily();refreshDetail();renderSkuInputs();syncInputs();render();});
   $('copyBtn').addEventListener('click',copySummary);
   $('exportBtn').addEventListener('click',exportImage);
+  $('exportMatrixBtn').addEventListener('click',exportMatrix);
   render();
 }
 
@@ -657,6 +659,134 @@ function exportImage(){
     document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
     const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);
   },'image/png');
+}
+/* ---------- full hurdle-rates matrix image (offline, pure Canvas) ---------- */
+function mxLines(pt,pd,tier){
+  const r=rule(pt,pd,tier);
+  if(!r||!r.avail) return null;                                   // tier not available
+  if(r.nsRule==='NONE'&&r.gmRule==='NONE'&&r.apRule==='NONE'&&r.rdRule==='NONE'&&r.capexRule==='NONE')
+    return {nohurdle:true};                                       // available but no hurdle
+  let ns;
+  if(pd==='Export') ns = tier==='SILVER' ? 'Total NS ≥ 1,000 (both tiers)' : 'Total NS < 1,000 (any ≥ 0)';
+  else switch(r.nsRule){
+    case 'FIXED_TIER1': ns='NS ≥ '+nf.format(r.nsT1)+' / '+nf.format(r.nsT2); break;
+    case 'INCREMENTAL_TIER1': ns='NS incremental ≥ '+nf.format(r.nsT1)+' / '+nf.format(r.nsT2); break;
+    case 'MEDIAN_TOP5_SUBFAMILY': ns='NS > median top-5 SKUs'; break;
+    case 'TOP5_GBF_CATEGORY': ns='NS > median top-10 SKUs'; break;
+    case 'DO_NOTHING': ns='NS incremental > Do-Nothing'; break;
+    case 'NO_INCREMENTALITY': ns='NS no incrementality'; break;
+    default: ns='NS —';
+  }
+  let floorcap=null;
+  if(pt==='Extensions'){
+    const f=DATA.floors;
+    if(tier==='SILVER') floorcap='floor '+f.TIER1.silver+'/'+f.TIER2.silver+' · cap 1,000/500';
+    else if(tier==='BRONZE') floorcap='floor '+f.TIER1.bronze+'/'+f.TIER2.bronze+' · cap 500/300';
+  }
+  const GM={ACCRETIVE_PLATFORM_COUNTRY:'GM ↑ Platform-Country',ACCRETIVE_PLATFORM_BU:'GM ↑ Platform-BU',
+            ACCRETIVE_SUBFAMILY:'GM ↑ Sub-family',GT_60K:'GM > 60 k€ impact',LT_60K:'GM < 60 k€ impact',NONE:'GM —'}[r.gmRule]||'GM —';
+  const NM={INC_NM_GE0_Y1:'NM Inc ≥ 0',NM_GE0_Y1:'NM ≥ 0',NONE:'NM —'}[r.apRule]||'NM —';
+  const RD={GT_5:'R&D >5×',GT_10:'R&D >10×',NONE:'R&D —'}[r.rdRule]||'R&D —';
+  const CPX={POS_ROI_3Y:'CPX +3-yr',POS_ROI_5Y:'CPX +5-yr',NONE:'CPX —'}[r.capexRule]||'CPX —';
+  return {ns,floorcap,gmnm:GM+' · '+NM,rdcpx:RD+' · '+CPX};
+}
+function exportMatrix(){
+  const SANS='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+  const sc=2, W=2000, M=14, TB=128, HR=66, SB=38, FB=120;
+  const tableL=M, tableW=W-2*M, col0W=430, tierW=(tableW-col0W)/3;
+  const colX=i=>tableL+col0W+i*tierW;
+  const TIERS=['GOLD','SILVER','BRONZE'];
+  const ROWS=[
+    {cl:'Core Business',label:'Extensions',sub:'New range · Line ext · In & Out',pt:'Extensions',pd:'Line Extensions (incl. In & Out)'},
+    {cl:'Core Business',label:'Renovations',sub:'with formulation / industrial test',pt:'Renovations',pd:'Renovation with formulation / or industrial test required'},
+    {cl:'Core Business',label:'Renovations',sub:'design / brand arch. · label minor change',pt:'Renovations',pd:'Renovation without formulation (design, brand architecture)'},
+    {cl:'Core Business',label:'Efficiencies',sub:'',pt:'Efficiencies',pd:'Efficiencies'},
+    {cl:'Beyond Core',label:'Transformational Innovation',sub:'',pt:'Transformational',pd:'Innovation'},
+    {cl:'Beyond Core',label:'Transformational Renovation',sub:'',pt:'Transformational',pd:'Renovation'},
+    {cl:'Beyond Core',label:'Geographical Expansion',sub:'',pt:'Geographical Expansion',pd:'Geographical Expansion'},
+    {cl:'Beyond Core',label:'Export',sub:'',pt:'Geographical Expansion',pd:'Export'},
+  ];
+  const nLines=c=> c==null?1 : c.nohurdle?1 : (1+(c.floorcap?1:0)+1+1);
+  const built=ROWS.map(r=>{const cells=TIERS.map(t=>mxLines(r.pt,r.pd,t));
+    return {...r,cells,h:Math.max(60,22+Math.max(...cells.map(nLines))*23)};});
+  let H=TB+HR, prevCl=null;
+  for(const b of built){ if(b.cl!==prevCl){H+=SB;prevCl=b.cl;} H+=b.h; }
+  H+=FB;
+  const cv=document.createElement('canvas'); cv.width=W*sc; cv.height=H*sc;
+  const x=cv.getContext('2d'); x.scale(sc,sc); x.textBaseline='alphabetic';
+  const F=(w,s)=>w+' '+s+'px '+SANS;
+  const put=(s,lx,ly,wgt,size,color,maxW,ital)=>{let z=size;const pre=ital?'italic ':'';
+    const f=()=>x.font=pre+wgt+' '+z+'px '+SANS; f();
+    while(x.measureText(s).width>maxW&&z>9){z--;f();}
+    x.fillStyle=color;x.textAlign='left';x.fillText(s,lx,ly);};
+  // background + title band
+  x.fillStyle='#FFFFFF';x.fillRect(0,0,W,H);
+  x.fillStyle='#34495E';x.fillRect(0,0,W,TB);
+  x.textAlign='left';x.fillStyle='#FFFFFF';x.font=F('800',40);
+  x.fillText('Innovation Model 2.0 — Hurdle Rates',M+58,72);
+  x.fillStyle='#C8D2DE';x.font=F('500',18);
+  x.fillText('Each box lists the hurdles to earn that tier — a tier is granted only when ALL of them are met',M+60,104);
+  // column header row
+  let y=TB;
+  x.fillStyle='#2C3E50';x.fillRect(tableL,y,col0W,HR);
+  x.fillStyle='#FFFFFF';x.textAlign='left';x.font=F('800',18);x.fillText('Project type',tableL+18,y+30);
+  x.fillStyle='#AEBBCB';x.font=F('600',12.5);x.fillText('5 hurdles per tier',tableL+18,y+50);
+  const TCOL={GOLD:'#B8860B',SILVER:'#6B7689',BRONZE:'#9C6B3F'};
+  TIERS.forEach((t,i)=>{x.fillStyle=TCOL[t];x.fillRect(colX(i),y,tierW,HR);
+    x.fillStyle='#FFFFFF';x.textAlign='center';x.font=F('800',19);x.fillText(t,colX(i)+tierW/2,y+HR/2+7);});
+  y+=HR;
+  // rows
+  const rowEdges=[], bands=[]; prevCl=null;
+  for(const b of built){
+    if(b.cl!==prevCl){ bands.push({y,cl:b.cl}); y+=SB; prevCl=b.cl; }
+    const rh=b.h;
+    x.fillStyle=b.cl==='Beyond Core'?'#FDF1E6':'#EEF1F5';x.fillRect(tableL,y,col0W,rh);
+    put(b.label,tableL+18,y+(b.sub?34:rh/2+6),'800',19,'#16233A',col0W-34);
+    if(b.sub) put(b.sub,tableL+18,y+56,'600',13,'#8A93A3',col0W-34);
+    b.cells.forEach((c,i)=>{
+      const cx=colX(i); x.fillStyle='#FFFFFF';x.fillRect(cx,y,tierW,rh);
+      if(c==null){ x.fillStyle='#F6F8FA';x.fillRect(cx,y,tierW,rh);
+        x.fillStyle='#AEB6C2';x.textAlign='center';x.font='italic '+F('600',16);x.fillText('N.A.',cx+tierW/2,y+rh/2+6); return; }
+      if(c.nohurdle){ put('No hurdle rate',cx+18,y+rh/2+6,'700',16,'#2C3E50',tierW-34); return; }
+      let ly=y+30; const lx=cx+18, mw=tierW-34;
+      put(c.ns,lx,ly,'700',17,'#16233A',mw); ly+=23;
+      if(c.floorcap){ put(c.floorcap,lx,ly,'600',13,'#8A93A3',mw,true); ly+=23; }
+      put(c.gmnm,lx,ly,'600',15,'#2C3E50',mw); ly+=23;
+      put(c.rdcpx,lx,ly,'600',15,'#2C3E50',mw);
+    });
+    y+=rh; rowEdges.push(y);
+  }
+  const fy=y;
+  // grid: vertical separators + horizontal row separators
+  x.strokeStyle='#DBE1EA';x.lineWidth=1;x.beginPath();
+  x.moveTo(tableL+col0W,TB+HR);x.lineTo(tableL+col0W,fy);
+  for(let i=1;i<3;i++){x.moveTo(colX(i),TB+HR);x.lineTo(colX(i),fy);}
+  for(const e of rowEdges){x.moveTo(tableL,e);x.lineTo(tableL+tableW,e);}
+  x.stroke();
+  // redraw section bands (mask the vertical lines crossing them)
+  for(const bd of bands){ x.fillStyle=bd.cl==='Beyond Core'?'#EA7317':'#2C3E50';x.fillRect(tableL,bd.y,tableW,SB);
+    x.fillStyle='#FFFFFF';x.textAlign='left';x.font=F('800',15);
+    x.fillText(bd.cl==='Beyond Core'?'BEYOND CORE':'CORE BUSINESS',tableL+18,bd.y+SB/2+5); }
+  x.strokeStyle='#C7CFDA';x.strokeRect(tableL,TB,tableW,fy-TB);
+  // footer legend band
+  x.fillStyle='#F0F2F5';x.fillRect(0,fy,W,H-fy);
+  const navy='#0B1F3A',gray='#55617A',orange='#C75E08';
+  const seg=(arr,xx,yy)=>{let cxp=xx;for(const s of arr){x.font=s[1];x.fillStyle=s[2];x.textAlign='left';x.fillText(s[0],cxp,yy);cxp+=x.measureText(s[0]).width;}};
+  seg([['NS ',F('800',14),navy],['Net Sales Y3 (k€, T1/T2)      ',F('500',14),gray],
+       ['GM ',F('800',14),navy],['Gross Margin (↑ accretive vs reference · floor 35%)      ',F('500',14),gray],
+       ['NM ',F('800',14),navy],['Net Margin Y1 / A&P      ',F('500',14),gray],
+       ['R&D ',F('800',14),navy],['R&D ROI      ',F('500',14),gray],
+       ['CPX ',F('800',14),navy],['CAPEX ROI (+ positive)',F('500',14),gray]], M+30, fy+36);
+  seg([['Tier 1: ',F('800',14),navy],['Spain · Italy · France · Germany        ',F('500',14),gray],
+       ['Tier 2: ',F('800',14),orange],['Belgium · Nordics · Rest · Spain Foodservice',F('500',14),gray]], M+30, fy+66);
+  seg([['— ',F('700',14),gray],['not required        ',F('500',14),gray],
+       ['N.A. ',F('700',14),gray],['tier not available        ',F('500',14),gray],
+       ['Extensions NS is floored & capped — the cap shown is the effective ceiling.','italic '+F('500',14),'#8A93A3']], M+30, fy+96);
+  // download
+  cv.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u; a.download='Innovation_Model_2.0_Hurdle_Rates.png';
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
+    const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);},'image/png');
 }
 function copySummary(){
   const c=ctxOf();
