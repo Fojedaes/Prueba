@@ -206,9 +206,9 @@ footer b{color:var(--ink-soft)}
       </div>
 
       <div class="sec" id="skuSec">
-        <p class="eyebrow"><span class="n">3</span> Detalle por SKU <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">— Extensions only</span></p>
+        <p class="eyebrow"><span class="n">3</span> SKU Detail <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">— Extensions only</span></p>
         <div id="skuList"></div>
-        <button class="addbtn" id="addSku" type="button">+ Añadir SKU</button>
+        <button class="addbtn" id="addSku" type="button">+ Add SKU</button>
         <p class="note-inline" id="skuNote"></p>
       </div>
     </div>
@@ -256,13 +256,13 @@ footer b{color:var(--ink-soft)}
           </div>
         </div>
       </div>
-
-      <footer>
-        <b>About the data.</b> The app does not include SKU-level data: only aggregated references per Family-BU from <b>v25R</b> (family GM%, top-5 and top-10 NS median, number of SKUs). The NS benchmark is calculated at <b>Family-BU</b> level (not sub-family), matching the actual Excel formulas, even though the internal nomenclature says "subfamily".<br>
-        Internal governance tool; does not constitute financial advice. Reference figures remain sensitive budgetary data.
-      </footer>
     </div>
   </div>
+
+  <footer>
+    <b>About the data.</b> The app does not include SKU-level data: only aggregated references per Family-BU from <b>v25R</b> (family GM%, top-5 and top-10 NS median, number of SKUs). The NS benchmark is calculated at <b>Family-BU</b> level (not sub-family), matching the actual Excel formulas, even though the internal nomenclature says "subfamily".<br>
+    Internal governance tool; does not constitute financial advice. Reference figures remain sensitive budgetary data.
+  </footer>
 </div>
 
 <script>
@@ -530,7 +530,7 @@ function renderSkuInputs(){
     const row=document.createElement('div'); row.className='sku-row';
     row.innerHTML=`<span class="lab">SKU ${idx+1}</span>
       <input type="number" step="50" value="${v??''}" data-sku="${idx}" aria-label="NS Y3 SKU ${idx+1} (k€)">
-      <button class="icon-btn" data-del="${idx}" title="Eliminar SKU" aria-label="Eliminar SKU ${idx+1}">\xd7</button>`;
+      <button class="icon-btn" data-del="${idx}" title="Delete SKU" aria-label="Delete SKU ${idx+1}">\xd7</button>`;
     host.appendChild(row);
   });
   host.querySelectorAll('input[data-sku]').forEach(inp=>{
@@ -595,64 +595,64 @@ function exportImage(){
              none:{bg:'#F0F2F5',fg:'#8A93A3',pill:'—'},na:{bg:'#F0F2F5',fg:'#8A93A3',pill:'N.A.'}};
   const RANKCOL={GOLD:'#B8860B',SILVER:'#6B7689',BRONZE:'#9C6B3F','NO TIER':'#C0392B'};
   const MED={GOLD:'🥇',SILVER:'🥈',BRONZE:'🥉','NO TIER':'⛔'};
-  const W=1180,H=440,P=44,sc=2;
+  const W=980,H=300,P=30,sc=2;
   const cv=document.createElement('canvas'); cv.width=W*sc; cv.height=H*sc;
   const x=cv.getContext('2d'); x.scale(sc,sc);
   const rr=(X,Y,w,h,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();};
-  const fit=(t,max,start)=>{let s=start;x.font='700 '+s+'px '+SANS;while(x.measureText(t).width>max&&s>9){s--;x.font='700 '+s+'px '+SANS;}return s;};
+  const fit=(t,max,start)=>{let s=start;x.font='700 '+s+'px '+SANS;while(x.measureText(t).width>max&&s>8){s--;x.font='700 '+s+'px '+SANS;}return s;};
   const SANS='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
   // background
   x.fillStyle='#FFFFFF';x.fillRect(0,0,W,H);
-  x.fillStyle='#0B1F3A';x.fillRect(0,0,W,6);
+  x.fillStyle='#0B1F3A';x.fillRect(0,0,W,5);
   // header text
   x.textBaseline='alphabetic';
-  x.fillStyle='#8A93A3';x.font='700 12px '+SANS;
-  x.fillText('GBFOODS · EUROPE — INNOVATION HURDLE CALCULATOR',P,P+6);
-  x.fillStyle='#0B1F3A';x.font='800 26px '+SANS;
-  x.fillText(`${S.bu} · ${S.platform} · ${S.family}`,P,P+38);
-  x.fillStyle='#55617A';x.font='600 15px '+SANS;
-  x.fillText(`${S.ptype} / ${S.pdetail}  ·  ${clusterOf(S.ptype,S.pdetail)}`,P,P+62);
+  x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
+  x.fillText('GBFOODS · EUROPE — INNOVATION HURDLE CALCULATOR',P,P+4);
+  x.fillStyle='#0B1F3A';let ts=fit(`${S.bu} · ${S.platform} · ${S.family}`,W-2*P-220,21);x.font='800 '+ts+'px '+SANS;
+  x.fillText(`${S.bu} · ${S.platform} · ${S.family}`,P,P+28);
+  x.fillStyle='#55617A';x.font='600 13px '+SANS;
+  x.fillText(`${S.ptype} / ${S.pdetail}  ·  ${clusterOf(S.ptype,S.pdetail)}`,P,P+48);
   // rank badge (top-right)
-  const bw=250,bh=70,bx=W-P-bw,by=P-6;
-  x.fillStyle=RANKCOL[d.best]; rr(bx,by,bw,bh,12); x.fill();
-  x.fillStyle='#FFFFFF';x.font='700 12px '+SANS;x.textAlign='left';
-  x.fillText('BEST TIER ACHIEVED',bx+18,by+26);
-  x.font='800 30px '+SANS;
-  x.fillText(`${MED[d.best]} ${d.best}`,bx+18,by+56);
+  const bw=200,bh=54,bx=W-P-bw,by=P-6;
+  x.fillStyle=RANKCOL[d.best]; rr(bx,by,bw,bh,10); x.fill();
+  x.fillStyle='#FFFFFF';x.font='700 10px '+SANS;x.textAlign='left';
+  x.fillText('BEST TIER ACHIEVED',bx+16,by+21);
+  x.font='800 24px '+SANS;
+  x.fillText(`${MED[d.best]} ${d.best}`,bx+16,by+45);
   x.textAlign='left';
   // criterion cards
-  const top=P+92, gap=16, n=5;
-  const cw=(W-2*P-gap*(n-1))/n, ch=210;
+  const top=P+66, gap=12, n=5;
+  const cw=(W-2*P-gap*(n-1))/n, ch=150;
   for(let i=0;i<n;i++){
     const cell=d.cells[i]; const col=COL[cell.status]||COL.none;
     const cx=P+i*(cw+gap);
-    x.fillStyle=col.bg; rr(cx,top,cw,ch,12); x.fill();
-    x.strokeStyle='rgba(11,31,58,.08)';x.lineWidth=1; rr(cx,top,cw,ch,12); x.stroke();
+    x.fillStyle=col.bg; rr(cx,top,cw,ch,10); x.fill();
+    x.strokeStyle='rgba(11,31,58,.08)';x.lineWidth=1; rr(cx,top,cw,ch,10); x.stroke();
     // label
-    x.fillStyle='#16233A';x.font='800 16px '+SANS;x.textAlign='center';
-    x.fillText(d.labels[i],cx+cw/2,top+30);
+    x.fillStyle='#16233A';x.font='800 14px '+SANS;x.textAlign='center';
+    x.fillText(d.labels[i],cx+cw/2,top+23);
     // divider
-    x.strokeStyle='rgba(11,31,58,.10)';x.beginPath();x.moveTo(cx+16,top+44);x.lineTo(cx+cw-16,top+44);x.stroke();
+    x.strokeStyle='rgba(11,31,58,.10)';x.beginPath();x.moveTo(cx+14,top+34);x.lineTo(cx+cw-14,top+34);x.stroke();
     // hurdle
-    x.fillStyle='#8A93A3';x.font='700 11px '+SANS;
-    x.fillText('HURDLE',cx+cw/2,top+66);
-    x.fillStyle='#55617A';let hs=fit(cell.text||'—',cw-20,13);x.font='600 '+hs+'px '+SANS;
-    x.fillText(cell.text||'—',cx+cw/2,top+86);
+    x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
+    x.fillText('HURDLE',cx+cw/2,top+51);
+    x.fillStyle='#55617A';let hs=fit(cell.text||'—',cw-16,12);x.font='600 '+hs+'px '+SANS;
+    x.fillText(cell.text||'—',cx+cw/2,top+68);
     // project value
-    x.fillStyle='#8A93A3';x.font='700 11px '+SANS;
-    x.fillText('PROJECT',cx+cw/2,top+120);
-    x.fillStyle='#16233A';let vs=fit(d.vals[i],cw-20,17);x.font='800 '+vs+'px '+SANS;
-    x.fillText(d.vals[i],cx+cw/2,top+144);
+    x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
+    x.fillText('PROJECT',cx+cw/2,top+90);
+    x.fillStyle='#16233A';let vs=fit(d.vals[i],cw-16,16);x.font='800 '+vs+'px '+SANS;
+    x.fillText(d.vals[i],cx+cw/2,top+108);
     // status pill
-    const pw=78,ph=26,px=cx+cw/2-pw/2,py=top+162;
-    x.fillStyle=col.fg; rr(px,py,pw,ph,13); x.fill();
-    x.fillStyle='#FFFFFF';x.font='800 12px '+SANS;x.fillText(col.pill,cx+cw/2,py+17);
+    const pw=72,ph=23,px=cx+cw/2-pw/2,py=top+120;
+    x.fillStyle=col.fg; rr(px,py,pw,ph,12); x.fill();
+    x.fillStyle='#FFFFFF';x.font='800 11px '+SANS;x.fillText(col.pill,cx+cw/2,py+15);
     x.textAlign='left';
   }
   // footer
-  x.fillStyle='#8A93A3';x.font='500 11px '+SANS;x.textAlign='left';
+  x.fillStyle='#8A93A3';x.font='500 10px '+SANS;x.textAlign='left';
   const stamp=new Date().toISOString().slice(0,10);
-  x.fillText(`Generated ${stamp} · References from v25R (Family-BU). Internal governance tool — sensitive budgetary data.`,P,H-26);
+  x.fillText(`Generated ${stamp} · References from v25R (Family-BU). Internal governance tool — sensitive budgetary data.`,P,H-18);
   // download
   const safe=s=>String(s).replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_');
   cv.toBlob(b=>{
