@@ -595,64 +595,60 @@ function exportImage(){
              none:{bg:'#F0F2F5',fg:'#8A93A3',pill:'—'},na:{bg:'#F0F2F5',fg:'#8A93A3',pill:'N.A.'}};
   const RANKCOL={GOLD:'#B8860B',SILVER:'#6B7689',BRONZE:'#9C6B3F','NO TIER':'#C0392B'};
   const MED={GOLD:'🥇',SILVER:'🥈',BRONZE:'🥉','NO TIER':'⛔'};
-  const W=980,H=300,P=30,sc=2;
+  const TIERBG={GOLD:'#FBF3DC',SILVER:'#EEF1F5',BRONZE:'#F4ECE3','NO TIER':'#FBE9E7'};
+  // compact table strip (Excel-style): header / hurdle / value rows
+  const P=14, rankW=132, n=5, critW=150;
+  const tableW=rankW+n*critW, W=tableW+2*P;
+  const hH=24, hHu=24, hV=30, ty=30;
+  const H=ty+hH+hHu+hV+24, sc=2;
   const cv=document.createElement('canvas'); cv.width=W*sc; cv.height=H*sc;
   const x=cv.getContext('2d'); x.scale(sc,sc);
-  const rr=(X,Y,w,h,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();};
-  const fit=(t,max,start)=>{let s=start;x.font='700 '+s+'px '+SANS;while(x.measureText(t).width>max&&s>8){s--;x.font='700 '+s+'px '+SANS;}return s;};
   const SANS='-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+  const rr=(X,Y,w,h,r)=>{x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();};
+  const fit=(t,max,start,wgt)=>{let s=start;x.font=wgt+' '+s+'px '+SANS;while(x.measureText(t).width>max&&s>7){s--;x.font=wgt+' '+s+'px '+SANS;}return s;};
+  const cellTxt=(t,cx,cw,cy,start,wgt,color)=>{x.fillStyle=color;const s=fit(t,cw-12,start,wgt);x.font=wgt+' '+s+'px '+SANS;x.fillText(t,cx+cw/2,cy);};
   // background
   x.fillStyle='#FFFFFF';x.fillRect(0,0,W,H);
-  x.fillStyle='#0B1F3A';x.fillRect(0,0,W,5);
-  // header text
-  x.textBaseline='alphabetic';
-  x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
-  x.fillText('GBFOODS · EUROPE — INNOVATION HURDLE CALCULATOR',P,P+4);
-  x.fillStyle='#0B1F3A';let ts=fit(`${S.bu} · ${S.platform} · ${S.family}`,W-2*P-220,21);x.font='800 '+ts+'px '+SANS;
-  x.fillText(`${S.bu} · ${S.platform} · ${S.family}`,P,P+28);
-  x.fillStyle='#55617A';x.font='600 13px '+SANS;
-  x.fillText(`${S.ptype} / ${S.pdetail}  ·  ${clusterOf(S.ptype,S.pdetail)}`,P,P+48);
-  // rank badge (top-right)
-  const bw=200,bh=54,bx=W-P-bw,by=P-6;
-  x.fillStyle=RANKCOL[d.best]; rr(bx,by,bw,bh,10); x.fill();
-  x.fillStyle='#FFFFFF';x.font='700 10px '+SANS;x.textAlign='left';
-  x.fillText('BEST TIER ACHIEVED',bx+16,by+21);
-  x.font='800 24px '+SANS;
-  x.fillText(`${MED[d.best]} ${d.best}`,bx+16,by+45);
-  x.textAlign='left';
-  // criterion cards
-  const top=P+66, gap=12, n=5;
-  const cw=(W-2*P-gap*(n-1))/n, ch=150;
-  for(let i=0;i<n;i++){
-    const cell=d.cells[i]; const col=COL[cell.status]||COL.none;
-    const cx=P+i*(cw+gap);
-    x.fillStyle=col.bg; rr(cx,top,cw,ch,10); x.fill();
-    x.strokeStyle='rgba(11,31,58,.08)';x.lineWidth=1; rr(cx,top,cw,ch,10); x.stroke();
-    // label
-    x.fillStyle='#16233A';x.font='800 14px '+SANS;x.textAlign='center';
-    x.fillText(d.labels[i],cx+cw/2,top+23);
-    // divider
-    x.strokeStyle='rgba(11,31,58,.10)';x.beginPath();x.moveTo(cx+14,top+34);x.lineTo(cx+cw-14,top+34);x.stroke();
-    // hurdle
-    x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
-    x.fillText('HURDLE',cx+cw/2,top+51);
-    x.fillStyle='#55617A';let hs=fit(cell.text||'—',cw-16,12);x.font='600 '+hs+'px '+SANS;
-    x.fillText(cell.text||'—',cx+cw/2,top+68);
-    // project value
-    x.fillStyle='#8A93A3';x.font='700 10px '+SANS;
-    x.fillText('PROJECT',cx+cw/2,top+90);
-    x.fillStyle='#16233A';let vs=fit(d.vals[i],cw-16,16);x.font='800 '+vs+'px '+SANS;
-    x.fillText(d.vals[i],cx+cw/2,top+108);
-    // status pill
-    const pw=72,ph=23,px=cx+cw/2-pw/2,py=top+120;
-    x.fillStyle=col.fg; rr(px,py,pw,ph,12); x.fill();
-    x.fillStyle='#FFFFFF';x.font='800 11px '+SANS;x.fillText(col.pill,cx+cw/2,py+15);
-    x.textAlign='left';
-  }
+  // title line
+  x.textBaseline='alphabetic';x.textAlign='left';
+  x.fillStyle='#0B1F3A';const tt=fit(`${S.bu} · ${S.platform} · ${S.family}  —  ${S.ptype} / ${S.pdetail}`,tableW,13,'800');
+  x.font='800 '+tt+'px '+SANS;
+  x.fillText(`${S.bu} · ${S.platform} · ${S.family}  —  ${S.ptype} / ${S.pdetail}`,P,ty-9);
+  // table rows clipped to rounded outer
+  const tx=P, colX=i=>tx+rankW+i*critW;
+  x.save(); rr(tx,ty,tableW,hH+hHu+hV,8); x.clip();
+  x.textAlign='center';x.textBaseline='middle';
+  // header row
+  x.fillStyle='#0B1F3A';x.fillRect(tx,ty,tableW,hH);
+  cellTxt('Rank',tx,rankW,ty+hH/2,12,'700','#FFFFFF');
+  for(let i=0;i<n;i++) cellTxt(d.labels[i],colX(i),critW,ty+hH/2,12,'700','#FFFFFF');
+  // hurdle row
+  const hy=ty+hH;
+  x.fillStyle='#EEF1F5';x.fillRect(tx,hy,rankW,hHu);
+  cellTxt('Hurdle',tx,rankW,hy+hHu/2,11,'700','#55617A');
+  for(let i=0;i<n;i++){x.fillStyle='#FCFDFE';x.fillRect(colX(i),hy,critW,hHu);
+    cellTxt(d.cells[i].text||'—',colX(i),critW,hy+hHu/2,11,'600','#55617A');}
+  // value row
+  const vy=hy+hHu;
+  x.fillStyle=TIERBG[d.best]||'#F0F2F5';x.fillRect(tx,vy,rankW,hV);
+  cellTxt(`${MED[d.best]} ${d.best}`,tx,rankW,vy+hV/2,13,'800',RANKCOL[d.best]||'#16233A');
+  for(let i=0;i<n;i++){const col=COL[d.cells[i].status]||COL.none;
+    x.fillStyle=col.bg;x.fillRect(colX(i),vy,critW,hV);
+    cellTxt(d.vals[i],colX(i),critW,vy+hV/2,14,'800','#16233A');}
+  x.restore();
+  // grid lines + outer border
+  x.strokeStyle='rgba(11,31,58,.12)';x.lineWidth=1;
+  x.beginPath();
+  for(let i=0;i<=n;i++){x.moveTo(colX(i),ty);x.lineTo(colX(i),vy+hV);}
+  x.moveTo(tx,ty);x.lineTo(tx,vy+hV);
+  x.moveTo(tx,hy);x.lineTo(tx+tableW,hy);x.moveTo(tx,vy);x.lineTo(tx+tableW,vy);
+  x.stroke();
+  rr(tx,ty,tableW,hH+hHu+hV,8);x.stroke();
   // footer
-  x.fillStyle='#8A93A3';x.font='500 10px '+SANS;x.textAlign='left';
+  x.textAlign='left';x.textBaseline='alphabetic';
+  x.fillStyle='#8A93A3';x.font='500 9px '+SANS;
   const stamp=new Date().toISOString().slice(0,10);
-  x.fillText(`Generated ${stamp} · References from v25R (Family-BU). Internal governance tool — sensitive budgetary data.`,P,H-18);
+  x.fillText(`Generated ${stamp} · v25R references (Family-BU) · GBfoods Europe Innovation Hurdle Calculator · internal use`,P,H-7);
   // download
   const safe=s=>String(s).replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_');
   cv.toBlob(b=>{
