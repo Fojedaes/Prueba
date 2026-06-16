@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -61,7 +61,7 @@ select,input[type=number]{font-family:var(--sans);font-size:14px;color:var(--ink
 input[type=number]{font-family:var(--mono)}
 select:focus,input:focus{outline:none;border-color:var(--navy-int);box-shadow:0 0 0 3px rgba(30,78,140,.15)}
 .field.off{opacity:.4}
-.field.off label::after{content:" · no aplica";color:var(--muted);font-weight:600}
+.field.off label::after{content:" · not applicable";color:var(--muted);font-weight:600}
 .field.off select,.field.off input{background:#F7F8FA}
 
 .seg{display:inline-flex;border:1px solid #D4DAE4;border-radius:8px;overflow:hidden;width:max-content}
@@ -167,7 +167,7 @@ footer b{color:var(--ink-soft)}
       <div>
         <div class="brand">GBfoods · Europe — <b>Modelo de Innovación 2.0</b></div>
         <h1>Innovation Hurdle Calculator</h1>
-        <div class="sub">Clasificación por tier y hurdle rates de cada proyecto.</div>
+        <div class="sub">Tier classification and hurdle rates for each project.</div>
       </div>
       <div class="cluster-pill" id="clusterPill">—</div>
     </div>
@@ -177,28 +177,28 @@ footer b{color:var(--ink-soft)}
     <!-- INPUTS -->
     <div class="panel">
       <div class="sec">
-        <p class="eyebrow"><span class="n">1</span> Alcance del proyecto</p>
+        <p class="eyebrow"><span class="n">1</span> Project Scope</p>
         <div class="fields">
           <div class="field"><label for="bu">BU</label><select id="bu"></select></div>
-          <div class="field"><label for="platform">Plataforma</label><select id="platform"></select></div>
-          <div class="field full"><label for="family">Familia</label><select id="family"></select></div>
-          <div class="field"><label for="ptype">Tipo de proyecto</label><select id="ptype"></select></div>
-          <div class="field"><label for="pdetail">Sub-tipo</label><select id="pdetail"></select></div>
+          <div class="field"><label for="platform">Platform</label><select id="platform"></select></div>
+          <div class="field full"><label for="family">Family</label><select id="family"></select></div>
+          <div class="field"><label for="ptype">Project Type</label><select id="ptype"></select></div>
+          <div class="field"><label for="pdetail">Sub-type</label><select id="pdetail"></select></div>
         </div>
       </div>
 
       <div class="sec">
-        <p class="eyebrow"><span class="n">2</span> Ambición (Año 3)</p>
+        <p class="eyebrow"><span class="n">2</span> Ambition (Year 3)</p>
         <div class="fields">
           <div class="field" id="f-nsTotal"><label for="nsTotal">NS Y3 total <span class="hint">(k€)</span></label><input type="number" id="nsTotal" step="50"></div>
           <div class="field" id="f-nsInc"><label for="nsInc">NS Y3 incremental <span class="hint">(k€)</span></label><input type="number" id="nsInc" step="50"></div>
-          <div class="field" id="f-gmPct"><label for="gmPct">GM% del proyecto <span class="hint">(%)</span></label><input type="number" id="gmPct" step="0.5"></div>
-          <div class="field" id="f-gmImpact"><label for="gmImpact">Impacto GM <span class="hint">(€, Efficiencies)</span></label><input type="number" id="gmImpact" step="1000"></div>
-          <div class="field" id="f-incNM"><label for="incNM">Margen Neto Inc. Y1 <span class="hint">(k€)</span></label><input type="number" id="incNM" step="10"></div>
+          <div class="field" id="f-gmPct"><label for="gmPct">Project GM% <span class="hint">(%)</span></label><input type="number" id="gmPct" step="0.5"></div>
+          <div class="field" id="f-gmImpact"><label for="gmImpact">GM Impact <span class="hint">(€, Efficiencies)</span></label><input type="number" id="gmImpact" step="1000"></div>
+          <div class="field" id="f-incNM"><label for="incNM">Inc. Net Margin Y1 <span class="hint">(k€)</span></label><input type="number" id="incNM" step="10"></div>
           <div class="field" id="f-rdRoi"><label for="rdRoi">R&amp;D ROI <span class="hint">(x)</span></label><input type="number" id="rdRoi" step="0.1"></div>
-          <div class="field full" id="f-capex"><label>CAPEX con ROI positivo</label>
-            <div class="seg" role="group" aria-label="CAPEX ROI positivo">
-              <button type="button" id="capYes" aria-pressed="true">Sí</button>
+          <div class="field full" id="f-capex"><label>CAPEX with Positive ROI</label>
+            <div class="seg" role="group" aria-label="CAPEX positive ROI">
+              <button type="button" id="capYes" aria-pressed="true">Yes</button>
               <button type="button" id="capNo" aria-pressed="false">No</button>
             </div>
           </div>
@@ -206,7 +206,7 @@ footer b{color:var(--ink-soft)}
       </div>
 
       <div class="sec" id="skuSec">
-        <p class="eyebrow"><span class="n">3</span> Detalle por SKU <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">— solo Extensions</span></p>
+        <p class="eyebrow"><span class="n">3</span> Detalle por SKU <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">— Extensions only</span></p>
         <div id="skuList"></div>
         <button class="addbtn" id="addSku" type="button">+ Añadir SKU</button>
         <p class="note-inline" id="skuNote"></p>
@@ -219,7 +219,7 @@ footer b{color:var(--ink-soft)}
         <div class="stamp">
           <div class="medal NONE" id="medal">—</div>
           <div>
-            <div class="rk-lab">Mejor tier alcanzado</div>
+            <div class="rk-lab">Best Tier Achieved</div>
             <div class="rk NONE" id="rank">—</div>
             <div class="why" id="why"></div>
             <div class="effns" id="effns"></div>
@@ -227,14 +227,14 @@ footer b{color:var(--ink-soft)}
         </div>
 
         <div class="sec">
-          <p class="eyebrow">Evaluación por criterio</p>
+          <p class="eyebrow">Evaluation by Criterion</p>
           <table class="matrix" id="matrix"><tbody></tbody></table>
         </div>
 
         <div class="sec" id="skuResultSec" style="display:none">
-          <p class="eyebrow">Resultado por SKU</p>
+          <p class="eyebrow">SKU Result</p>
           <div class="cap">
-            <div class="lab">Aplicar cap a hurdles por-SKU
+            <div class="lab">Apply cap to per-SKU hurdles
               <small id="capDesc">Techo = Silver Transformacional · MIN() · propuesta, no en v25R</small>
             </div>
             <label class="switch"><input type="checkbox" id="capToggle"><span class="slider"></span></label>
@@ -244,22 +244,22 @@ footer b{color:var(--ink-soft)}
         </div>
 
         <div class="sec">
-          <p class="eyebrow">Referencias DB (Familia-BU)</p>
+          <p class="eyebrow">DB References (Family-BU)</p>
           <div class="refs" id="refs"></div>
         </div>
 
         <div class="sec">
           <div class="actions">
-            <button class="btn primary" id="copyBtn" type="button">Copiar resumen</button>
-            <button class="btn ghost" id="resetBtn" type="button">Volver al ejemplo</button>
+            <button class="btn primary" id="copyBtn" type="button">Copy summary</button>
+            <button class="btn ghost" id="resetBtn" type="button">Reset to example</button>
             <span class="toast" id="toast">Copiado ✓</span>
           </div>
         </div>
       </div>
 
       <footer>
-        <b>Sobre los datos.</b> La app no incluye datos a nivel SKU: solo las referencias agregadas por Familia-BU de <b>v25R</b> (GM% de familia, mediana top-5 y top-10 de NS, nº de SKUs). El benchmark de NS se calcula a nivel <b>Familia-BU</b> (no sub-familia), igual que las fórmulas reales del Excel, pese a que la nomenclatura interna dice "subfamily".<br>
-        Herramienta de gobernanza interna; no constituye asesoramiento financiero. Las cifras de referencia siguen siendo datos presupuestarios sensibles.
+        <b>About the data.</b> The app does not include SKU-level data: only aggregated references per Family-BU from <b>v25R</b> (family GM%, top-5 and top-10 NS median, number of SKUs). The NS benchmark is calculated at <b>Family-BU</b> level (not sub-family), matching the actual Excel formulas, even though the internal nomenclature says "subfamily".<br>
+        Internal governance tool; does not constitute financial advice. Reference figures remain sensitive budgetary data.
       </footer>
     </div>
   </div>
@@ -268,8 +268,8 @@ footer b{color:var(--ink-soft)}
 <script>
 const DATA = {"rules": [{"ptype": "Transformational", "pdetail": "Innovation", "tier": "GOLD", "cluster": "Beyond Core", "avail": 1, "nsRule": "FIXED_TIER1", "nsT1": 5000, "nsT2": 3000, "gmRule": "ACCRETIVE_PLATFORM_COUNTRY", "apRule": "NONE", "rdRule": "NONE", "capexRule": "POS_ROI_5Y", "notes": "NS construido sobre MS, WD y rotación. Si la plataforma no existe, GM% > 35%."}, {"ptype": "Transformational", "pdetail": "Innovation", "tier": "SILVER", "cluster": "Beyond Core", "avail": 1, "nsRule": "FIXED_TIER1", "nsT1": 2000, "nsT2": 1000, "gmRule": "ACCRETIVE_PLATFORM_BU", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_3Y", "notes": "NS construido sobre MS, WD y rotación. Si la plataforma no existe, GM% > 35%."}, {"ptype": "Transformational", "pdetail": "Innovation", "tier": "BRONZE", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Transformational", "pdetail": "Renovation", "tier": "GOLD", "cluster": "Beyond Core", "avail": 1, "nsRule": "INCREMENTAL_TIER1", "nsT1": 3000, "nsT2": 2000, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_5Y", "notes": "NS incremental vs. base (MS, WD y rotación)."}, {"ptype": "Transformational", "pdetail": "Renovation", "tier": "SILVER", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Transformational", "pdetail": "Renovation", "tier": "BRONZE", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Geographical Expansion", "pdetail": "Geographical Expansion", "tier": "GOLD", "cluster": "Beyond Core", "avail": 1, "nsRule": "FIXED_TIER1", "nsT1": 5000, "nsT2": 3000, "gmRule": "ACCRETIVE_PLATFORM_COUNTRY", "apRule": "NONE", "rdRule": "NONE", "capexRule": "POS_ROI_5Y", "notes": "NS construido sobre MS, WD y rotación. Si la plataforma no existe, GM% > 35%."}, {"ptype": "Geographical Expansion", "pdetail": "Geographical Expansion", "tier": "SILVER", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Geographical Expansion", "pdetail": "Geographical Expansion", "tier": "BRONZE", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Geographical Expansion", "pdetail": "Export", "tier": "GOLD", "cluster": "Beyond Core", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Geographical Expansion", "pdetail": "Export", "tier": "SILVER", "cluster": "Beyond Core", "avail": 1, "nsRule": "FIXED_TIER1", "nsT1": 1000, "nsT2": 1000, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "Export Silver: NS Y3 total ≥ 1.000 k€."}, {"ptype": "Geographical Expansion", "pdetail": "Export", "tier": "BRONZE", "cluster": "Beyond Core", "avail": 1, "nsRule": "FIXED_TIER1", "nsT1": 0, "nsT2": 0, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "Export Bronze: NS Y3 total < 1.000 k€ (cualquier NS ≥ 0)."}, {"ptype": "Extensions", "pdetail": "New range", "tier": "GOLD", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Extensions", "pdetail": "New range", "tier": "SILVER", "cluster": "Core Business", "avail": 1, "nsRule": "MEDIAN_TOP5_SUBFAMILY", "nsT1": null, "nsT2": null, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_3Y", "notes": "NS Y3 > mediana top 5 SKUs de la familia."}, {"ptype": "Extensions", "pdetail": "New range", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "TOP5_GBF_CATEGORY", "nsT1": null, "nsT2": null, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "NM_GE0_Y1", "rdRule": "GT_5", "capexRule": "POS_ROI_3Y", "notes": "SKU en top 5 de la categoría GBF en Y3."}, {"ptype": "Extensions", "pdetail": "Line Extensions (incl. In & Out)", "tier": "GOLD", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Extensions", "pdetail": "Line Extensions (incl. In & Out)", "tier": "SILVER", "cluster": "Core Business", "avail": 1, "nsRule": "MEDIAN_TOP5_SUBFAMILY", "nsT1": null, "nsT2": null, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_3Y", "notes": "NS Y3 > mediana top 5 SKUs de la familia."}, {"ptype": "Extensions", "pdetail": "Line Extensions (incl. In & Out)", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "TOP5_GBF_CATEGORY", "nsT1": null, "nsT2": null, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "NM_GE0_Y1", "rdRule": "GT_5", "capexRule": "POS_ROI_3Y", "notes": "SKU en top 5 de la categoría GBF en Y3."}, {"ptype": "Renovations", "pdetail": "Renovation with formulation / or industrial test required", "tier": "GOLD", "cluster": "Core Business", "avail": 1, "nsRule": "INCREMENTAL_TIER1", "nsT1": 2000, "nsT2": 1000, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_5Y", "notes": "NS incremental vs. base."}, {"ptype": "Renovations", "pdetail": "Renovation with formulation / or industrial test required", "tier": "SILVER", "cluster": "Core Business", "avail": 1, "nsRule": "DO_NOTHING", "nsT1": null, "nsT2": null, "gmRule": "ACCRETIVE_SUBFAMILY", "apRule": "INC_NM_GE0_Y1", "rdRule": "NONE", "capexRule": "POS_ROI_3Y", "notes": "NS Inc. > escenario Do Nothing."}, {"ptype": "Renovations", "pdetail": "Renovation with formulation / or industrial test required", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "NO_INCREMENTALITY", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "INC_NM_GE0_Y1", "rdRule": "GT_5", "capexRule": "POS_ROI_3Y", "notes": "Sin incrementalidad esperada."}, {"ptype": "Renovations", "pdetail": "Renovation without formulation (design, brand architecture)", "tier": "GOLD", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Renovations", "pdetail": "Renovation without formulation (design, brand architecture)", "tier": "SILVER", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Renovations", "pdetail": "Renovation without formulation (design, brand architecture)", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "Sin hurdle rate."}, {"ptype": "Renovations", "pdetail": "Label minor change", "tier": "GOLD", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Renovations", "pdetail": "Label minor change", "tier": "SILVER", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Renovations", "pdetail": "Label minor change", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "Sin hurdle rate."}, {"ptype": "Efficiencies", "pdetail": "Efficiencies", "tier": "GOLD", "cluster": "Core Business", "avail": 0, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "NONE", "apRule": "NONE", "rdRule": "NONE", "capexRule": "NONE", "notes": "N.A."}, {"ptype": "Efficiencies", "pdetail": "Efficiencies", "tier": "SILVER", "cluster": "Core Business", "avail": 1, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "GT_60K", "apRule": "NONE", "rdRule": "GT_10", "capexRule": "POS_ROI_3Y", "notes": "Impacto GM > 60k€. R&D ROI 5-10 considerado si es beneficio colateral."}, {"ptype": "Efficiencies", "pdetail": "Efficiencies", "tier": "BRONZE", "cluster": "Core Business", "avail": 1, "nsRule": "NONE", "nsT1": null, "nsT2": null, "gmRule": "LT_60K", "apRule": "NONE", "rdRule": "GT_10", "capexRule": "POS_ROI_3Y", "notes": "Impacto GM < 60k€."}], "buTier": {"Spain": "TIER1", "France": "TIER1", "Germany": "TIER1", "Italy": "TIER1", "Belgium": "TIER2", "Nordics": "TIER2", "Rest": "TIER2", "Spain Foodservice": "TIER2"}, "floors": {"TIER1": {"silver": 500, "bronze": 100}, "TIER2": {"silver": 300, "bronze": 50}}, "ref": {"Oriental Rice Dry meals||Spain Foodservice": {"n": 4, "med5": 1, "med10": 1, "gm": 0.2367}, "Sofritos and recipes||Spain": {"n": 7, "med5": 539, "med10": 150, "gm": 0.3447}, "Classic tomato puree||Nordics": {"n": 2, "med5": 24, "med10": 24, "gm": -0.1146}, "Baked Beans||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Thyme||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry individual instant soups||Belgium": {"n": 54, "med5": 1456, "med10": 1108, "gm": 0.5362}, "Special use pasta||Rest": {"n": 1, "med5": 0, "med10": 0, "gm": 1.0}, "Wet creams||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Oil||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Liquid T.E.||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Vinegar||Belgium": {"n": 2, "med5": 521, "med10": 521, "gm": -0.0095}, "Rice dry meals||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry mashed potatoes||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet creams||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Market research||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not Assigned||France": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range tomato sauce||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Standard Mayonnaise||France": {"n": 0, "med5": 0, "med10": 0, "gm": 0.9957}, "Basic range liquid bouillon||Spain": {"n": 43, "med5": 3823, "med10": 2954, "gm": 0.4119}, "Rents||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Mustard||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value bouillon cubes||Spain": {"n": 3, "med5": 279, "med10": 279, "gm": 0.6877}, "Chilled meals||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Fried tomato||Spain Foodservice": {"n": 3, "med5": 644, "med10": 644, "gm": 0.0589}, "Confectionery||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value tomato sauce||Rest": {"n": 1, "med5": 0, "med10": 0, "gm": 379.0}, "Not Assigned||Spain": {"n": 1, "med5": 717, "med10": 717, "gm": 1.0001}, "Oriental Rice Dry meals||Italy": {"n": 6, "med5": 224, "med10": 175, "gm": -0.2455}, "Spices & Herbs||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value conc. Liquid bouillon||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Oriental Rice Dry meals||Rest": {"n": 3, "med5": 0, "med10": 0, "gm": 0.2527}, "Dry individual instant soups||Germany": {"n": 17, "med5": 829, "med10": 506, "gm": 0.231}, "Noodles||Spain Foodservice": {"n": 12, "med5": 37, "med10": 7, "gm": 0.3454}, "Tomato concentrate||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Gran Ragu||Italy": {"n": 39, "med5": 2502, "med10": 1393, "gm": 0.2869}, "Added value tomato sauce||Nordics": {"n": 4, "med5": 45, "med10": 45, "gm": 0.4}, "Cold wet sauces||France": {"n": 0, "med5": 0, "med10": 0, "gm": 50.9541}, "Wet culinary sauces||Spain Foodservice": {"n": 5, "med5": 63, "med10": 63, "gm": 0.4438}, "Other non media||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Ready Meals||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Tomato Mix Added Value||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Meals in sachet||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pasta dry meals||Spain": {"n": 3, "med5": 1734, "med10": 1734, "gm": 0.4771}, "Soy  Sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Gran Ragu||Rest": {"n": 27, "med5": 2622, "med10": 1440, "gm": 0.0727}, "Rice dry meals||Italy": {"n": 7, "med5": 350, "med10": 316, "gm": 0.392}, "Enhancers||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": 1.0}, "Cereals||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not assigned||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Rice dry meals||Rest": {"n": 2, "med5": 0, "med10": 0, "gm": 0.1302}, "Dry Meals in sachet||Nordics": {"n": 30, "med5": 309, "med10": 248, "gm": 0.3536}, "Soy  Sauces||Nordics": {"n": 6, "med5": 463, "med10": 390, "gm": 0.4136}, "Curry Powder||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Gran Ragu||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not assigned||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": 650001.0}, "Taste enrichers||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other chilled Soups non organic||Germany": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Outsourcing||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Paper Cardboard||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Taste enrichers||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Green tea||Italy": {"n": 5, "med5": 142, "med10": 142, "gm": 0.4702}, "Not assigned||Nordics": {"n": 1, "med5": 369, "med10": 369, "gm": 1.0106}, "Tomato concentrate||Italy": {"n": 1, "med5": 2, "med10": 2, "gm": -0.0859}, "Wet Outdoor Meals||Germany": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet Ready to Heat Tray||Germany": {"n": 7, "med5": 498, "med10": 469, "gm": -0.0194}, "Added value conc. Liquid bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Eintopf||Germany": {"n": 54, "med5": 5320, "med10": 4680, "gm": 0.2443}, "Tomato concentrate||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry individual instant soups||Spain Foodservice": {"n": 2, "med5": 0, "med10": 0, "gm": 0.2036}, "Added value liquid bouillon||Spain Foodservice": {"n": 6, "med5": 2, "med10": 1, "gm": 0.3235}, "Basic range bouillon cubes||Italy": {"n": 32, "med5": 4070, "med10": 2498, "gm": 0.6033}, "Dry Meals in sachet||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other Raw Materials||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Fixed Asssets||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Standard pasta||Spain Foodservice": {"n": 12, "med5": 165, "med10": 78, "gm": 0.0674}, "Oriental Rice Dry meals||Spain": {"n": 4, "med5": 371, "med10": 371, "gm": 0.0939}, "Basic range bouillon cubes||Rest": {"n": 13, "med5": 42, "med10": 13, "gm": 0.5428}, "Transport expenses||Rest": {"n": 1, "med5": 2, "med10": 2, "gm": 0.6096}, "Other chilled Soups (Organic)||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not assigned||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Chilled meals||Germany": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range powder bouillon||Spain Foodservice": {"n": 7, "med5": 462, "med10": 160, "gm": 0.6346}, "Basic range bouillon cubes||Nordics": {"n": 13, "med5": 156, "med10": 115, "gm": 0.4269}, "Cereals||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Jelly TE||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic tomato puree||Spain Foodservice": {"n": 1, "med5": 357, "med10": 357, "gm": 0.1183}, "Special Mayonnaise||Belgium": {"n": 1, "med5": 69, "med10": 69, "gm": 0.0543}, "Basic range conc. Liquid bouillon||Italy": {"n": 4, "med5": 2, "med10": 2, "gm": 0.5627}, "Rice dry meals||Spain": {"n": 2, "med5": 238, "med10": 238, "gm": 0.4044}, "Real Mayonnaise||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Confectionery||France": {"n": 0, "med5": 0, "med10": 0, "gm": 3.2448}, "Premium pasta||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range conc. Liquid bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Sauces||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Noodles||France": {"n": 14, "med5": 330, "med10": 238, "gm": 0.2356}, "Fried tomato||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry individual instant soups||Rest": {"n": 6, "med5": 0, "med10": 0, "gm": 0.3694}, "Pasta||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Universal seasonings||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range conc. Liquid bouillon||Nordics": {"n": 3, "med5": 4, "med10": 4, "gm": 0.8434}, "Tomato derivatives||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Vinegar||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet creams||Spain Foodservice": {"n": 6, "med5": 13, "med10": 10, "gm": -0.3867}, "Basic range bouillon cubes||Belgium": {"n": 12, "med5": 153, "med10": 127, "gm": 0.4988}, "Shaker seasonings||Rest": {"n": 2, "med5": 1, "med10": 1, "gm": 0.5568}, "Instant pasta sheets||Spain Foodservice": {"n": 4, "med5": 133, "med10": 133, "gm": 0.5632}, "Noodles||Spain": {"n": 57, "med5": 3840, "med10": 1361, "gm": 0.4019}, "Ketchup||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry individual instant soups||Nordics": {"n": 21, "med5": 362, "med10": 214, "gm": 0.3938}, "Basic range powder bouillon||Italy": {"n": 5, "med5": 57, "med10": 57, "gm": 0.5091}, "Tomato derivatives||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet culinary sauces||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Universal seasonings||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range tomato sauce||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Standard pasta||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range powder bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other chilled Soups non organic||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet soup non organic||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other food products||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": 1.0}, "Basic range powder bouillon||Nordics": {"n": 24, "med5": 342, "med10": 183, "gm": 0.4298}, "Wet ready to heat pouch||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet soup organic||France": {"n": 14, "med5": 503, "med10": 399, "gm": 0.2159}, "Camomile||Italy": {"n": 13, "med5": 2123, "med10": 823, "gm": 0.4828}, "Wet Outdoor Meals||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Fruit drinks||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": 1.0}, "Dry individual instant soups||France": {"n": 33, "med5": 1226, "med10": 1062, "gm": 0.4838}, "Classic tea||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet Ready to Heat Tray||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pesto Basic Range||Italy": {"n": 17, "med5": 1525, "med10": 385, "gm": 0.3284}, "Warm Sauces||Belgium": {"n": 5, "med5": 184, "med10": 184, "gm": 0.2625}, "Gran Ragu||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Eintopf||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Sauces||Spain Foodservice": {"n": 5, "med5": 55, "med10": 55, "gm": 0.3641}, "Other food products||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Camomile||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet ready to heat pouch||Nordics": {"n": 2, "med5": 45, "med10": 45, "gm": 0.236}, "Dry Outdoor Ready Meals||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Enhancers||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic pasta sheets||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pesto Basic Range||Rest": {"n": 2, "med5": 194, "med10": 194, "gm": 0.2434}, "Wet Outdoor Meals||Nordics": {"n": 43, "med5": 413, "med10": 398, "gm": 0.4024}, "Wet soup organic||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pickles Sauces||Belgium": {"n": 6, "med5": 163, "med10": 128, "gm": 0.2587}, "Premium liquid bouillon||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Ketchup||Belgium": {"n": 7, "med5": 47, "med10": 28, "gm": -0.0253}, "Instant pasta sheets||Rest": {"n": 4, "med5": 0, "med10": 0, "gm": 0.3741}, "Not assigned||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": 2.1028}, "Dry Outdoor Ready Meals||Nordics": {"n": 65, "med5": 344, "med10": 250, "gm": 0.3691}, "Added value liquid bouillon||Spain": {"n": 24, "med5": 1446, "med10": 976, "gm": 0.4188}, "Wet soups bowl||France": {"n": 6, "med5": 261, "med10": 190, "gm": 0.0368}, "Basic range tomato sauce||Rest": {"n": 39, "med5": 1714, "med10": 1502, "gm": 0.0832}, "Classic chopped tomato||Spain Foodservice": {"n": 1, "med5": 257, "med10": 257, "gm": 0.0457}, "Standard pasta||Spain": {"n": 3, "med5": 32, "med10": 32, "gm": -0.223}, "Wet soups||Belgium": {"n": 6, "med5": 140, "med10": 128, "gm": -0.1773}, "Wet soup non organic||Belgium": {"n": 39, "med5": 899, "med10": 685, "gm": 0.3669}, "Dry mashed potatoes||Spain Foodservice": {"n": 1, "med5": 102, "med10": 102, "gm": 0.1781}, "Meat||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range dry soups||Italy": {"n": 4, "med5": 3, "med10": 3, "gm": 0.5001}, "Flavours||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range tomato sauce||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Green tea||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range powder bouillon||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic tea||Italy": {"n": 17, "med5": 1047, "med10": 372, "gm": 0.4451}, "Basic range dry soups||Rest": {"n": 11, "med5": 2, "med10": 1, "gm": 0.4637}, "Wet pasta sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Light Mayonnaise||Belgium": {"n": 8, "med5": 560, "med10": 233, "gm": 0.3745}, "Dry stuffed pasta||Rest": {"n": 1, "med5": 0, "med10": 0, "gm": 1.0}, "All Others||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Cookies||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic tomato puree||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic tea||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Sauces||Rest": {"n": 4, "med5": 1, "med10": 1, "gm": 0.452}, "Basic range bouillon cubes||Spain Foodservice": {"n": 2, "med5": 265, "med10": 265, "gm": 0.7494}, "Liquid bouillon||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range dry soups||Nordics": {"n": 26, "med5": 189, "med10": 157, "gm": 0.3853}, "Tisane||Italy": {"n": 18, "med5": 647, "med10": 532, "gm": 0.4133}, "Classic chopped tomato||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet Ready to Heat Can||Germany": {"n": 6, "med5": 240, "med10": 139, "gm": 0.182}, "Sofritos and recipes||Rest": {"n": 4, "med5": 0, "med10": 0, "gm": -0.0767}, "Tisane||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Sauces||Nordics": {"n": 52, "med5": 734, "med10": 440, "gm": 0.2546}, "Liquid bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other Ethnic products||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": 1.0}, "Dry meals||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Ground chopped tomato||Spain Foodservice": {"n": 2, "med5": 1669, "med10": 1669, "gm": 0.0647}, "Basic Range Wet T.E.||Belgium": {"n": 6, "med5": 489, "med10": 485, "gm": 0.5817}, "Wet soups||Germany": {"n": 33, "med5": 1197, "med10": 1023, "gm": 0.2698}, "Starches||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic chopped tomato||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Sweet Condensed Milk||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet creams||Spain": {"n": 7, "med5": 358, "med10": 265, "gm": -0.0631}, "Real Mayonnaise||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range liquid bouillon||Italy": {"n": 32, "med5": 3401, "med10": 1634, "gm": 0.4654}, "Instant pasta sheets||Spain": {"n": 9, "med5": 551, "med10": 280, "gm": 0.5246}, "Premium pasta||Spain Foodservice": {"n": 8, "med5": 35, "med10": 20, "gm": 0.1071}, "Sofritos and recipes||Nordics": {"n": 1, "med5": 3, "med10": 3, "gm": 0.5438}, "Basic range conc. Liquid bouillon||Spain Foodservice": {"n": 19, "med5": 736, "med10": 411, "gm": 0.5068}, "Flavours||Belgium": {"n": 2, "med5": 6, "med10": 6, "gm": 0.0065}, "Classic chopped tomato||Nordics": {"n": 1, "med5": 31, "med10": 31, "gm": 0.3614}, "Basic range liquid bouillon||Rest": {"n": 7, "med5": 41, "med10": 34, "gm": 0.2533}, "Chilled Gazpacho non organic||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Green tea||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Outsourcing||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet Soup Plastic Bottle||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value tomato sauce||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet desserts||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": 1.0}, "Dry meals in a cup||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not assigned||France": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet gazpacho||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry Sauces||Spain": {"n": 5, "med5": 206, "med10": 206, "gm": 0.6407}, "Ground chopped tomato||Rest": {"n": 16, "med5": 628, "med10": 342, "gm": 0.1247}, "Cold wet sauces||Italy": {"n": 1, "med5": 77, "med10": 77, "gm": -0.0229}, "Vegetables||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other cooking aids||Spain Foodservice": {"n": 4, "med5": 141, "med10": 141, "gm": 0.3926}, "Liquid T.E.||Belgium": {"n": 11, "med5": 117, "med10": 57, "gm": 0.4179}, "Not assigned||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Cold wet sauces||Rest": {"n": 3, "med5": 34, "med10": 34, "gm": 0.0596}, "Rents||Belgium": {"n": 2, "med5": 3, "med10": 3, "gm": 0.9998}, "Wet Soup Plastic Bottle||France": {"n": 20, "med5": 1073, "med10": 739, "gm": 0.2945}, "Classic chopped tomato||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Concentrate Tomato + vegetables||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Warm Sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Camomile||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Cold wet sauces||Nordics": {"n": 6, "med5": 177, "med10": 144, "gm": 0.2245}, "Classic pasta sheets||Spain Foodservice": {"n": 4, "med5": 50, "med10": 50, "gm": 0.2542}, "Pesto Basic Range||Spain Foodservice": {"n": 2, "med5": 71, "med10": 71, "gm": 0.4328}, "Chilled Gazpacho (organic)||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Standard Mayonnaise||Belgium": {"n": 36, "med5": 3596, "med10": 2079, "gm": 0.3405}, "Not Assigned||Belgium": {"n": 2, "med5": 1, "med10": 1, "gm": 1.0}, "Pickles Sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other chilled Soups (Organic)||France": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet Soup Plastic Bottle||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other products discontinued||Italy": {"n": 1, "med5": 9, "med10": 9, "gm": 0.4598}, "Wet gazpacho||France": {"n": 0, "med5": 0, "med10": 0, "gm": 2.2837}, "Added value pasta||Rest": {"n": 2, "med5": 0, "med10": 0, "gm": 1.0}, "Wet Ready to Heat Can||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range bouillon cubes||Spain": {"n": 19, "med5": 1245, "med10": 614, "gm": 0.7295}, "Liquid T.E.||Germany": {"n": 16, "med5": 1216, "med10": 597, "gm": 0.4247}, "Other cooking aids||Italy": {"n": 2, "med5": 50, "med10": 50, "gm": 0.4332}, "Vegetables||Belgium": {"n": 6, "med5": 124, "med10": 86, "gm": 0.1803}, "Wet soups||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Other cooking aids||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Cold wet sauces||Belgium": {"n": 67, "med5": 969, "med10": 736, "gm": 0.338}, "Wet Ready to Heat Can||Nordics": {"n": 6, "med5": 247, "med10": 174, "gm": 0.1583}, "Concentrate Tomato + vegetables||Italy": {"n": 1, "med5": 2, "med10": 2, "gm": -0.1077}, "Rice||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range dry soups||Spain Foodservice": {"n": 13, "med5": 29, "med10": 25, "gm": 0.1541}, "Ground chopped tomato||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet pasta sauces||Spain Foodservice": {"n": 3, "med5": 14, "med10": 14, "gm": 0.2965}, "Light Mayonnaise||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Concentrate Tomato + vegetables||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not Assigned||Germany": {"n": 2, "med5": 143, "med10": 143, "gm": 0.9986}, "Premium pasta||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Basic range conc. Liquid bouillon||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pesto Added Value||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Industrial base: No salt bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Light Mayonnaise||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Mustard||Belgium": {"n": 6, "med5": 162, "med10": 121, "gm": 0.365}, "Added value dry soups||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Confectionery||Italy": {"n": 1, "med5": 6, "med10": 6, "gm": 0.037}, "Dry individual instant soups||Spain": {"n": 7, "med5": 300, "med10": 269, "gm": 0.4159}, "Sofritos and recipes||Spain Foodservice": {"n": 3, "med5": 434, "med10": 434, "gm": 0.501}, "Tisane||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Paste bouillon||Italy": {"n": 3, "med5": 136, "med10": 136, "gm": 0.369}, "Basic Range Wet T.E.||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Fried tomato||Rest": {"n": 3, "med5": 42, "med10": 42, "gm": -0.0001}, "Tomato Mix Standard||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Confectionery||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Paste bouillon||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Shaker seasonings||Spain": {"n": 2, "med5": 85, "med10": 85, "gm": 0.1523}, "Wet soups||France": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Noodles||Italy": {"n": 24, "med5": 2173, "med10": 1589, "gm": 0.4008}, "Wet soup non organic||France": {"n": 126, "med5": 2341, "med10": 2146, "gm": 0.3358}, "Liquid T.E.||Spain Foodservice": {"n": 4, "med5": 3, "med10": 3, "gm": 0.3457}, "Oriental Rice Dry meals||Belgium": {"n": 3, "med5": 55, "med10": 55, "gm": -0.7225}, "Rents||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Fried tomato||Nordics": {"n": 2, "med5": 3, "med10": 3, "gm": -1.9602}, "Noodles||Rest": {"n": 15, "med5": 2, "med10": 1, "gm": 0.157}, "Basic range liquid bouillon||Spain Foodservice": {"n": 7, "med5": 42, "med10": 24, "gm": 0.5382}, "Confectionery||Nordics": {"n": 18, "med5": 39, "med10": 27, "gm": 1.1067}, "Wet culinary sauces||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": -296148.8333}, "Paste bouillon||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value bouillon cubes||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet soups||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "High Oleic||Spain Foodservice": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pesto Added Value||Italy": {"n": 23, "med5": 2108, "med10": 1297, "gm": 0.3386}, "Pizza kits||Italy": {"n": 1, "med5": 0, "med10": 0, "gm": -61.9537}, "Noodles||Nordics": {"n": 16, "med5": 95, "med10": 43, "gm": 0.1964}, "Other cooking aids||Spain": {"n": 1, "med5": 3, "med10": 3, "gm": -0.1016}, "Not Assigned||Spain Foodservice": {"n": 1, "med5": 80, "med10": 80, "gm": 1.0005}, "Fats & Oils||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pesto Added Value||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Dry meals in a cup||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Chocolate||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Paper Cardboard||Belgium": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic pasta sheets||Spain": {"n": 3, "med5": 295, "med10": 295, "gm": 0.3984}, "Dry meals in a cup||Nordics": {"n": 4, "med5": 47, "med10": 47, "gm": 0.1374}, "Pesto Basic Range||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Rents||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Liquid T.E.||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Cold wet sauces||Spain Foodservice": {"n": 49, "med5": 435, "med10": 354, "gm": 0.2528}, "Wet soup organic||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value liquid bouillon||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Noodles||Belgium": {"n": 21, "med5": 1748, "med10": 711, "gm": 0.4602}, "Rents||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Added value bouillon cubes||Italy": {"n": 3, "med5": 1518, "med10": 1518, "gm": 0.4749}, "Basic range dry soups||France": {"n": 3, "med5": 133, "med10": 133, "gm": 0.4298}, "Added value liquid bouillon||Rest": {"n": 3, "med5": 3, "med10": 3, "gm": 0.312}, "Liquid T.E.||Nordics": {"n": 37, "med5": 1980, "med10": 1216, "gm": 0.5353}, "Added value bouillon cubes||Rest": {"n": 2, "med5": 17, "med10": 17, "gm": 0.5575}, "Standard pasta||Rest": {"n": 2, "med5": 0, "med10": 0, "gm": 0.4504}, "Meat||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Flavours||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Rents||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Not assigned||Germany": {"n": 1, "med5": 93, "med10": 93, "gm": 1.0}, "Standard Mayonnaise||Rest": {"n": 9, "med5": 48, "med10": 9, "gm": -6369.8095}, "Not Assigned||Rest": {"n": 2, "med5": 136, "med10": 136, "gm": 0.1534}, "Basic range dry soups||Spain": {"n": 25, "med5": 1452, "med10": 1073, "gm": 0.6209}, "Wet pasta sauces||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Classic tomato puree||Italy": {"n": 3, "med5": 4, "med10": 4, "gm": 0.0848}, "Added value bouillon cubes||Nordics": {"n": 1, "med5": 24, "med10": 24, "gm": 0.4656}, "Food salt||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Wet soups bowl||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Tea and infusions||Italy": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Chocolate||Belgium": {"n": 1, "med5": 63, "med10": 63, "gm": 0.4525}, "Standard Mayonnaise||Nordics": {"n": 2, "med5": 90, "med10": 90, "gm": 0.2997}, "Not Assigned||Nordics": {"n": 0, "med5": 0, "med10": 0, "gm": 0.9215}, "Classic tomato puree||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Tea and infusions||Rest": {"n": 0, "med5": 0, "med10": 0, "gm": null}, "Pasta dry meals||Rest": {"n": 3, "med5": 2, "med10": 2, "gm": 0.2522}, "Dry meals in a cup||Spain": {"n": 0, "med5": 0, "med10": 0, "gm": 6.0752}}, "platformFamilies": {"Rest": ["Added value bouillon cubes", "Added value conc. Liquid bouillon", "Added value dry soups", "Added value liquid bouillon", "Added value pasta", "Added value tomato sauce", "All Others", "Baked Beans", "Basic Range Wet T.E.", "Basic range bouillon cubes", "Basic range conc. Liquid bouillon", "Basic range dry soups", "Basic range liquid bouillon", "Basic range powder bouillon", "Basic range tomato sauce", "Camomile", "Cereals", "Chilled Gazpacho (organic)", "Chilled Gazpacho non organic", "Chilled meals", "Chocolate", "Classic chopped tomato", "Classic pasta sheets", "Classic tea", "Classic tomato puree", "Cold wet sauces", "Concentrate Tomato + vegetables", "Confectionery", "Cookies", "Curry Powder", "Depreciation", "Dry Meals in sachet", "Dry Outdoor Ready Meals", "Dry Sauces", "Dry Thyme", "Dry individual instant soups", "Dry mashed potatoes", "Dry meals", "Dry meals in a cup", "Dry stuffed pasta", "Eintopf", "Enhancers", "Fats & Oils", "Fixed Asssets", "Flavours", "Food salt", "Fried tomato", "Fruit drinks", "Gran Ragu", "Green tea", "Ground chopped tomato", "High Oleic", "Industrial base: No salt bouillon", "Instant pasta sheets", "Jelly TE", "Ketchup", "Light Mayonnaise", "Liquid T.E.", "Liquid bouillon", "Market research", "Meat", "Mustard", "Noodles", "Not Assigned", "Not assigned", "Oil", "Oriental Rice Dry meals", "Other Ethnic products", "Other Raw Materials", "Other chilled Soups (Organic)", "Other chilled Soups non organic", "Other cooking aids", "Other food products", "Other non media", "Outsourcing", "Paper Cardboard", "Pasta", "Pasta dry meals", "Paste bouillon", "Pesto Added Value", "Pesto Basic Range", "Pickles Sauces", "Premium liquid bouillon", "Premium pasta", "Provision", "Ready Meals", "Real Mayonnaise", "Rents", "Rice", "Rice dry meals", "Sauces", "Shaker seasonings", "Sofritos and recipes", "Soy  Sauces", "Special use pasta", "Spices & Herbs", "Standard Mayonnaise", "Standard pasta", "Starches", "Sweet Condensed Milk", "Taste enrichers", "Tea and infusions", "Tisane", "Tomato Mix Added Value", "Tomato Mix Standard", "Tomato concentrate", "Tomato derivatives", "Transport expenses", "Universal seasonings", "Vegetables", "Vinegar", "Warm Sauces", "Wet Outdoor Meals", "Wet Ready to Heat Can", "Wet Ready to Heat Tray", "Wet Soup Plastic Bottle", "Wet creams", "Wet culinary sauces", "Wet desserts", "Wet gazpacho", "Wet pasta sauces", "Wet ready to heat pouch", "Wet soup non organic", "Wet soup organic", "Wet soups", "Wet soups bowl"], "Local Jewels": ["Added value bouillon cubes", "Added value pasta", "Added value tomato sauce", "Basic range bouillon cubes", "Basic range dry soups", "Basic range powder bouillon", "Basic range tomato sauce", "Camomile", "Classic chopped tomato", "Classic pasta sheets", "Classic tea", "Classic tomato puree", "Cold wet sauces", "Confectionery", "Dry Meals in sachet", "Dry Outdoor Ready Meals", "Dry Sauces", "Dry individual instant soups", "Dry mashed potatoes", "Dry stuffed pasta", "Enhancers", "Flavours", "Fried tomato", "Gran Ragu", "Green tea", "Ground chopped tomato", "Instant pasta sheets", "Liquid T.E.", "Noodles", "Not Assigned", "Not assigned", "Other cooking aids", "Other food products", "Other products discontinued", "Pasta dry meals", "Paste bouillon", "Pizza kits", "Premium pasta", "Rents", "Rice dry meals", "Shaker seasonings", "Sofritos and recipes", "Soy  Sauces", "Special use pasta", "Standard pasta", "Tisane", "Tomato concentrate", "Universal seasonings", "Vegetables", "Vinegar", "Wet Outdoor Meals", "Wet Ready to Heat Can", "Wet culinary sauces", "Wet pasta sauces"], "Sauces D&L": ["Cold wet sauces", "Ketchup", "Light Mayonnaise", "Mustard", "Pickles Sauces", "Real Mayonnaise", "Special Mayonnaise", "Standard Mayonnaise", "Warm Sauces"], "Broth": ["Added value conc. Liquid bouillon", "Added value liquid bouillon", "Basic Range Wet T.E.", "Basic range conc. Liquid bouillon", "Basic range liquid bouillon", "Liquid T.E."], "Noodles": ["Noodles", "Oriental Rice Dry meals"], "Soups & Ready Meals": ["Eintopf", "Wet Ready to Heat Can", "Wet Ready to Heat Tray", "Wet Soup Plastic Bottle", "Wet creams", "Wet gazpacho", "Wet soup non organic", "Wet soup organic", "Wet soups", "Wet soups bowl"], "Sauces": ["Pesto Added Value", "Pesto Basic Range", "Soy  Sauces", "Wet Ready to Heat Can", "Wet ready to heat pouch"]}, "buList": ["Spain", "Spain Foodservice", "Italy", "Germany", "France", "Belgium", "Nordics", "Rest"], "platList": ["Noodles", "Broth", "Soups & Ready Meals", "Sauces", "Sauces D&L", "Local Jewels", "Rest"]};
 
-const nf = new Intl.NumberFormat('es-ES',{maximumFractionDigits:0});
-const pf = (x)=> new Intl.NumberFormat('es-ES',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1}).format(x);
+const nf = new Intl.NumberFormat('en-GB',{maximumFractionDigits:0});
+const pf = (x)=> new Intl.NumberFormat('en-GB',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1}).format(x);
 const k = (v)=> nf.format(Math.round(v))+' k€';
 const $ = (id)=>document.getElementById(id);
 
@@ -308,25 +308,25 @@ function evNS(row,c){
     case 'MEDIAN_TOP5_SUBFAMILY':{const h=Math.max(c.fl.silver,c.med5);return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
     case 'TOP5_GBF_CATEGORY':{const h=Math.max(c.fl.bronze,c.med10);return {text:'≥ '+k(h),status:c.effNS>=h?'pass':'fail'};}
     case 'DO_NOTHING': return {text:'Inc > Do Nothing', status:c.nsInc>0?'pass':'fail'};
-    case 'NO_INCREMENTALITY': return {text:'Sin incrementalidad', status:'none'};
+    case 'NO_INCREMENTALITY': return {text:'No incrementality', status:'none'};
     default: return {text:'—',status:'none'};
   }
 }
 function evGM(row,c){
   if(!row||!row.avail) return {text:'',status:'na'};
   const r=row.gmRule;
-  if(r==='ACCRETIVE_PLATFORM_COUNTRY') return {text:'Accretive vs Plataforma-Pa\xeds (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
-  if(r==='ACCRETIVE_PLATFORM_BU') return {text:'Accretive vs Plataforma-BU (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
-  if(r==='ACCRETIVE_SUBFAMILY') return {text:'Accretive vs Familia (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
-  if(r==='GT_60K') return {text:'Impacto GM > 60 k€',status:c.gmImpact>60000?'pass':'fail'};
-  if(r==='LT_60K') return {text:'Impacto GM < 60 k€',status:c.gmImpact<=60000?'pass':'fail'};
+  if(r==='ACCRETIVE_PLATFORM_COUNTRY') return {text:'Accretive vs Platform-Country (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
+  if(r==='ACCRETIVE_PLATFORM_BU') return {text:'Accretive vs Platform-BU (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
+  if(r==='ACCRETIVE_SUBFAMILY') return {text:'Accretive vs Family (≥ '+pf(c.gmThreshold)+')',status:c.gmPct>=c.gmThreshold?'pass':'fail'};
+  if(r==='GT_60K') return {text:'GM Impact > 60 k€',status:c.gmImpact>60000?'pass':'fail'};
+  if(r==='LT_60K') return {text:'GM Impact < 60 k€',status:c.gmImpact<=60000?'pass':'fail'};
   return {text:'—',status:'none'};
 }
 function evNM(row,c){
   if(!row||!row.avail) return {text:'',status:'na'};
   const r=row.apRule;
-  if(r==='INC_NM_GE0_Y1') return {text:'MN Inc. Y1 ≥ 0',status:c.incNM>=0?'pass':'fail'};
-  if(r==='NM_GE0_Y1') return {text:'MN Y1 ≥ 0',status:c.incNM>=0?'pass':'fail'};
+  if(r==='INC_NM_GE0_Y1') return {text:'Inc. NM Y1 ≥ 0',status:c.incNM>=0?'pass':'fail'};
+  if(r==='NM_GE0_Y1') return {text:'NM Y1 ≥ 0',status:c.incNM>=0?'pass':'fail'};
   return {text:'—',status:'none'};
 }
 function evRD(row,c){
@@ -339,14 +339,14 @@ function evRD(row,c){
 function evCX(row,c){
   if(!row||!row.avail) return {text:'',status:'na'};
   const r=row.capexRule;
-  if(r==='POS_ROI_3Y') return {text:'ROI+ 3 a\xf1os',status:c.capexPos?'pass':'fail'};
-  if(r==='POS_ROI_5Y') return {text:'ROI+ 5 a\xf1os',status:c.capexPos?'pass':'fail'};
+  if(r==='POS_ROI_3Y') return {text:'ROI+ 3 years',status:c.capexPos?'pass':'fail'};
+  if(r==='POS_ROI_5Y') return {text:'ROI+ 5 years',status:c.capexPos?'pass':'fail'};
   return {text:'—',status:'none'};
 }
 const CRITS = [
   {key:'NS', label:'NS Y3', fn:evNS},
   {key:'GM', label:'Gross Margin', fn:evGM},
-  {key:'NM', label:'Margen Neto / A&P', fn:evNM},
+  {key:'NM', label:'Net Margin / A&P', fn:evNM},
   {key:'RD', label:'R&D ROI', fn:evRD},
   {key:'CX', label:'CAPEX', fn:evCX},
 ];
@@ -408,15 +408,15 @@ function render(){
   $('miniM').textContent=MEDAL[best]; $('miniT').textContent=best;
   $('why').textContent=explain(best,tiers,cl);
   $('effns').textContent = c.multi
-    ? 'NS evaluado (Extensions): M\xedn por SKU = '+k(c.effNS)
-    : 'NS evaluado: '+k(c.effNS)+' (NS Y3 total)';
+    ? 'Evaluated NS (Extensions): MIN per SKU = '+k(c.effNS)
+    : 'Evaluated NS: '+k(c.effNS)+' (NS Y3 total)';
 
   const winCls = cl==='Core Business'?'col-win-core':'col-win-beyond';
   let head='<tr><th class="crit"></th>';
   for(const t of ['GOLD','SILVER','BRONZE']){
     const av=tiers[t].avail;
     const isWin=(best===t);
-    head+=`<th class="col-h ${isWin?winCls:''}">${MEDAL[t]} ${t.charAt(0)+t.slice(1).toLowerCase()}<span class="av" style="color:${av?'var(--pass)':'var(--muted)'}">${av?'disponible':'N.A.'}</span></th>`;
+    head+=`<th class="col-h ${isWin?winCls:''}">${MEDAL[t]} ${t.charAt(0)+t.slice(1).toLowerCase()}<span class="av" style="color:${av?'var(--pass)':'var(--muted)'}">${av?'available':'N.A.'}</span></th>`;
   }
   head+='</tr>';
   let body='';
@@ -436,14 +436,14 @@ function render(){
 
   const r=c.r;
   const refRows=[
-    ['BU tier', c.buTier],
-    ['GM% Familia (BU)', r.gm==null?['sin datos',true]:pf(r.gm)],
-    ['# SKUs Familia-BU', r.n>0?nf.format(r.n):['sin datos',true]],
-    ['Mediana top-5 NS', r.med5>0?k(r.med5):['—',true]],
-    ['Mediana top-10 NS', r.med10>0?k(r.med10):['—',true]],
+    ['BU Tier', c.buTier],
+    ['GM% Family (BU)', r.gm==null?['no data',true]:pf(r.gm)],
+    ['# SKUs Family-BU', r.n>0?nf.format(r.n):['no data',true]],
+    ['Top-5 NS Median', r.med5>0?k(r.med5):['—',true]],
+    ['Top-10 NS Median', r.med10>0?k(r.med10):['—',true]],
     ['Floor Silver (tier)', k(c.fl.silver)],
     ['Floor Bronze (tier)', k(c.fl.bronze)],
-    ['Umbral GM aplicable', pf(c.gmThreshold)],
+    ['Applicable GM Threshold', pf(c.gmThreshold)],
   ];
   $('refs').innerHTML=refRows.map(([key,val])=>{
     const muted=Array.isArray(val); const text=muted?val[0]:val;
@@ -455,7 +455,7 @@ function render(){
   if(isExt){
     $('capToggle').checked=!!S.cap;
     const cap = c.buTier==='TIER1'?2000:1000;
-    $('capDesc').textContent='Techo = Silver Transformacional ('+k(cap)+') \xb7 MIN() \xb7 propuesta, no en v25R';
+    $('capDesc').textContent='Cap = Transformational Silver ('+k(cap)+') \xb7 MIN() \xb7 proposal, not in v25R';
     let Ts=nsHurdleFor('SILVER',c), Tb=nsHurdleFor('BRONZE',c);
     if(S.cap){ if(Ts!=null)Ts=Math.min(Ts,cap); if(Tb!=null)Tb=Math.min(Tb,cap); }
     const skusN=S.skus.map((x,idx)=>({i:idx+1,ns:x})).filter(o=>typeof o.ns==='number'&&o.ns>0);
@@ -471,9 +471,9 @@ function render(){
         <td><span class="chip ${pB?'pass':'fail'}">${pB?'PASS':'FAIL'}</span></td>
         <td><b class="${tierClass(bt)}" style="color:var(--${bt==='NO TIER'?'fail':bt.toLowerCase()})">${MEDAL[bt]} ${bt}</b></td></tr>`;
     });
-    if(!skusN.length) rows=`<tr><td colspan="7" style="text-align:left;color:var(--muted)">A\xf1ade el NS Y3 de al menos un SKU.</td></tr>`;
-    $('skut').innerHTML='<thead><tr><th>SKU</th><th>NS Y3</th><th>vs Silver</th><th>Silver?</th><th>vs Bronze</th><th>Bronze?</th><th>Mejor tier</th></tr></thead><tbody>'+rows+'</tbody>';
-    $('binding').innerHTML = worst? `Tier vinculante (peor SKU): <b class="${tierClass(worst)}" style="color:var(--${worst==='NO TIER'?'fail':worst.toLowerCase()})">${MEDAL[worst]} ${worst}</b> \xb7 hurdle Silver ${Ts!=null?k(Ts):'—'} / Bronze ${Tb!=null?k(Tb):'—'}` : '';
+    if(!skusN.length) rows=`<tr><td colspan="7" style="text-align:left;color:var(--muted)">Add NS Y3 for at least one SKU.</td></tr>`;
+    $('skut').innerHTML='<thead><tr><th>SKU</th><th>NS Y3</th><th>vs Silver</th><th>Silver?</th><th>vs Bronze</th><th>Bronze?</th><th>Best tier</th></tr></thead><tbody>'+rows+'</tbody>';
+    $('binding').innerHTML = worst? `Binding tier (worst SKU): <b class="${tierClass(worst)}" style="color:var(--${worst==='NO TIER'?'fail':worst.toLowerCase()})">${MEDAL[worst]} ${worst}</b> \xb7 Silver hurdle ${Ts!=null?k(Ts):'—'} / Bronze ${Tb!=null?k(Tb):'—'}` : '';
   }
 
   const rel=relevant(c);
@@ -486,8 +486,8 @@ function render(){
   $('f-capex').classList.toggle('off',!rel.capex);
   $('skuSec').style.opacity = isExt?'1':'.45';
   $('skuNote').textContent = isExt
-    ? 'Cada SKU se eval\xfaa por separado. El rank global usa M\xedn(NS por SKU) en el test de NS.'
-    : 'El detalle por SKU solo aplica a proyectos de tipo Extensions.';
+    ? 'Each SKU is evaluated separately. The global rank uses Min(NS per SKU) for the NS test.'
+    : 'SKU detail only applies to Extensions project types.';
 }
 
 function explain(best,tiers,cl){
@@ -495,16 +495,16 @@ function explain(best,tiers,cl){
     for(const t of ['BRONZE','SILVER','GOLD']){
       if(tiers[t].avail){
         const fails=CRITS.filter((cr,i)=>tiers[t].cells[i].status==='fail').map(cr=>cr.label);
-        return fails.length?('No alcanza ning\xfan tier. Falla en '+t.toLowerCase()+': '+fails.join(', ')+'.'):'Ning\xfan tier disponible cumple los criterios.';
+        return fails.length?('Does not reach any tier. Fails in '+t.toLowerCase()+': '+fails.join(', ')+'.'):'No available tier meets the criteria.';
       }
     }
-    return 'No hay tier disponible para este tipo de proyecto.';
+    return 'No tier available for this project type.';
   }
   const naHigher=[];
   if(best!=='GOLD' && !tiers.GOLD.avail) naHigher.push('Gold');
   if(best==='BRONZE' && !tiers.SILVER.avail) naHigher.push('Silver');
-  const extra = naHigher.length? ' ('+naHigher.join(' y ')+' no aplica'+(naHigher.length>1?'n':'')+' a este tipo).' : '.';
-  return 'Cumple todos los criterios activos de '+best.toLowerCase()+extra;
+  const extra = naHigher.length? ' ('+naHigher.join(' and ')+' not applicable to this type).' : '.';
+  return 'Meets all active criteria for '+best.toLowerCase()+extra;
 }
 
 function fill(sel,arr,val){ sel.innerHTML=arr.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join(''); }
@@ -569,7 +569,7 @@ function copySummary(){
   const c=ctxOf();
   const gold=tierResult('GOLD',c),silver=tierResult('SILVER',c),bronze=tierResult('BRONZE',c);
   let best='NO TIER'; for(const t of ['GOLD','SILVER','BRONZE'])if({GOLD:gold,SILVER:silver,BRONZE:bronze}[t].achieved){best=t;break;}
-  const txt=`Innovation Hurdle — ${S.bu} \xb7 ${S.platform} \xb7 ${S.family}\nTipo: ${S.ptype} / ${S.pdetail}  (${clusterOf(S.ptype,S.pdetail)})\nNS evaluado: ${k(c.effNS)}${c.multi?' (m\xedn por SKU)':''} \xb7 GM% ${pf(c.gmPct)} (umbral ${pf(c.gmThreshold)})\nResultado: ${best==='NO TIER'?'NO TIER':best}`;
+  const txt=`Innovation Hurdle — ${S.bu} \xb7 ${S.platform} \xb7 ${S.family}\nType: ${S.ptype} / ${S.pdetail}  (${clusterOf(S.ptype,S.pdetail)})\nEvaluated NS: ${k(c.effNS)}${c.multi?' (min per SKU)':''} \xb7 GM% ${pf(c.gmPct)} (threshold ${pf(c.gmThreshold)})\nResult: ${best==='NO TIER'?'NO TIER':best}`;
   navigator.clipboard.writeText(txt).then(()=>{const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);});
 }
 init();
