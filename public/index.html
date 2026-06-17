@@ -251,7 +251,6 @@ footer b{color:var(--ink-soft)}
           <div class="actions">
             <button class="btn primary" id="exportBtn" type="button">⬇ Export image</button>
             <button class="btn ghost" id="exportMatrixBtn" type="button">⬇ Export hurdle matrix</button>
-            <button class="btn ghost" id="copyBtn" type="button">Copy summary</button>
             <button class="btn ghost" id="resetBtn" type="button">Reset to example</button>
             <span class="toast" id="toast">Done ✓</span>
           </div>
@@ -568,7 +567,6 @@ function init(){
   $('capNo').addEventListener('click',()=>{S.capexPos=false;syncInputs();render();});
   $('addSku').addEventListener('click',()=>{S.skus.push(null);renderSkuInputs();render();});
   $('resetBtn').addEventListener('click',()=>{S=structuredClone(EX);fill($('bu'),DATA.buList,S.bu);fill($('platform'),DATA.platList,S.platform);fill($('ptype'),ptypes(),S.ptype);refreshFamily();refreshDetail();renderSkuInputs();syncInputs();render();});
-  $('copyBtn').addEventListener('click',copySummary);
   $('exportBtn').addEventListener('click',exportImage);
   $('exportMatrixBtn').addEventListener('click',exportMatrix);
   render();
@@ -787,13 +785,6 @@ function exportMatrix(){
     a.href=u; a.download='Innovation_Model_2.0_Hurdle_Rates.png';
     document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);
     const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);},'image/png');
-}
-function copySummary(){
-  const c=ctxOf();
-  const gold=tierResult('GOLD',c),silver=tierResult('SILVER',c),bronze=tierResult('BRONZE',c);
-  let best='NO TIER'; for(const t of ['GOLD','SILVER','BRONZE'])if({GOLD:gold,SILVER:silver,BRONZE:bronze}[t].achieved){best=t;break;}
-  const txt=`Innovation Hurdle — ${S.bu} \xb7 ${S.platform} \xb7 ${S.family}\nType: ${S.ptype} / ${S.pdetail}  (${clusterOf(S.ptype,S.pdetail)})\nEvaluated NS: ${k(c.effNS)}${c.multi?' (min per SKU)':''} \xb7 GM% ${pf(c.gmPct)} (threshold ${pf(c.gmThreshold)})\nResult: ${best==='NO TIER'?'NO TIER':best}`;
-  navigator.clipboard.writeText(txt).then(()=>{const t=$('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);});
 }
 init();
 </script>
