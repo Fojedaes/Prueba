@@ -116,6 +116,29 @@ select:focus,input:focus{outline:none;border-color:var(--navy-int);box-shadow:0 
 .kv .v{font-family:var(--mono);font-weight:600;color:var(--ink);text-align:right}
 .kv .v.muted{color:var(--muted);font-weight:500}
 
+.restab{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.restab th,.restab td{padding:7px 8px;text-align:center;border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.restab th:last-child,.restab td:last-child{border-right:0}
+.restab tr:last-child td{border-bottom:0}
+.restab thead th{background:var(--navy);color:#fff;font-size:10px;text-transform:uppercase;letter-spacing:.03em;font-weight:800}
+.restab thead th:first-child{text-align:left}
+.restab .hd{background:var(--line-2);color:var(--ink-soft);font-weight:700;text-align:left}
+.restab .hv{color:var(--ink-soft);font-size:11px;line-height:1.25}
+.restab .rrk{font-weight:800;text-align:left;white-space:nowrap}
+.restab .pv{font-weight:800;color:var(--ink)}
+.restab td.pass{background:var(--pass-bg)} .restab td.fail{background:var(--fail-bg)}
+.restab td.none,.restab td.na{background:var(--none-bg);color:var(--muted)}
+
+.det{border-top:1px solid var(--line-2)}
+.det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:14px 20px;
+  font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--ink-soft)}
+.det>summary::-webkit-details-marker{display:none}
+.det>summary::after{content:"▸";margin-left:auto;font-size:12px;color:var(--muted);transition:transform .15s}
+.det[open]>summary::after{transform:rotate(90deg)}
+.det>summary:hover{color:var(--navy-int)}
+.det-body{padding:2px 20px 18px}
+.det+.sec{border-top:1px solid var(--line-2)}
+
 .skut{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
 .skut th,.skut td{padding:6px 8px;border-top:1px solid var(--line-2);text-align:right}
 .skut th:first-child,.skut td:first-child{text-align:left}
@@ -190,7 +213,7 @@ footer b{color:var(--ink-soft)}
       <div class="sec">
         <p class="eyebrow"><span class="n">2</span> Ambition (Year 3)</p>
         <div class="fields">
-          <div class="field" id="f-nsTotal"><label for="nsTotal">NS Y3 total <span class="hint">(k€)</span></label><input type="number" id="nsTotal" step="50"></div>
+          <div class="field" id="f-nsTotal"><label for="nsTotal"><span id="nsTotalLab">NS Y3 total</span> <span class="hint">(k€)</span></label><input type="number" id="nsTotal" step="50"></div>
           <div class="field" id="f-nsInc"><label for="nsInc">NS Y3 incremental <span class="hint">(k€)</span></label><input type="number" id="nsInc" step="50"></div>
           <div class="field" id="f-gmPct"><label for="gmPct">Project GM% <span class="hint">(%)</span></label><input type="number" id="gmPct" step="0.5"></div>
           <div class="field" id="f-gmImpact"><label for="gmImpact">GM Impact <span class="hint">(€, Efficiencies)</span></label><input type="number" id="gmImpact" step="1000"></div>
@@ -227,25 +250,27 @@ footer b{color:var(--ink-soft)}
         </div>
 
         <div class="sec">
-          <p class="eyebrow">Evaluation by Criterion</p>
-          <table class="matrix" id="matrix"><tbody></tbody></table>
+          <p class="eyebrow">Result</p>
+          <table class="restab" id="restab"></table>
         </div>
 
-        <div class="sec" id="skuResultSec" style="display:none">
-          <p class="eyebrow">SKU Result</p>
-          <div class="cap">
-            <div class="lab">NS hurdle (floored &amp; capped)
-              <small id="capDesc"></small>
-            </div>
+        <details class="det">
+          <summary>Evaluation by Criterion</summary>
+          <div class="det-body"><table class="matrix" id="matrix"><tbody></tbody></table></div>
+        </details>
+
+        <details class="det" id="skuResultSec" style="display:none">
+          <summary>SKU Result</summary>
+          <div class="det-body">
+            <table class="skut" id="skut"><tbody></tbody></table>
+            <div class="binding" id="binding"></div>
           </div>
-          <table class="skut" id="skut"><tbody></tbody></table>
-          <div class="binding" id="binding"></div>
-        </div>
+        </details>
 
-        <div class="sec">
-          <p class="eyebrow">DB References (Family-BU)</p>
-          <div class="refs" id="refs"></div>
-        </div>
+        <details class="det">
+          <summary>DB References (Family-BU)</summary>
+          <div class="det-body"><div class="refs" id="refs"></div></div>
+        </details>
 
         <div class="sec">
           <div class="actions">
@@ -402,6 +427,8 @@ function render(){
   const pill=$('clusterPill');
   pill.textContent=cl;
   pill.className='cluster-pill '+(cl==='Core Business'?'cluster-core':'cluster-beyond');
+  const nsLab = S.pdetail==='In & Out' ? 'NS Y1' : 'NS Y3 total';
+  $('nsTotalLab').textContent = nsLab;
 
   const gold=tierResult('GOLD',c), silver=tierResult('SILVER',c), bronze=tierResult('BRONZE',c);
   const tiers={GOLD:gold,SILVER:silver,BRONZE:bronze};
@@ -416,7 +443,8 @@ function render(){
   $('why').textContent=explain(best,tiers,cl);
   $('effns').textContent = c.multi
     ? 'Evaluated NS (Extensions): MIN per SKU = '+k(c.effNS)
-    : 'Evaluated NS: '+k(c.effNS)+' (NS Y3 total)';
+    : 'Evaluated NS: '+k(c.effNS)+' ('+nsLab+')';
+  renderResultTable(c);
 
   const winCls = cl==='Core Business'?'col-win-core':'col-win-beyond';
   let head='<tr><th class="crit"></th>';
@@ -462,7 +490,6 @@ function render(){
   const isExt=(S.ptype==='Extensions');
   $('skuResultSec').style.display = isExt ? '' : 'none';
   if(isExt){
-    $('capDesc').textContent='Hurdle = MIN( MAX(floor, median), cap ). Silver cap '+k(c.silverCap)+' / Bronze cap '+k(c.bronzeCap)+' (v25R).';
     let Ts=nsHurdleFor('SILVER',c), Tb=nsHurdleFor('BRONZE',c);
     const skusN=S.skus.map((x,idx)=>({i:idx+1,ns:x})).filter(o=>typeof o.ns==='number'&&o.ns>0);
     let rows='', worst=null, ORD={'NO TIER':0,'BRONZE':1,'SILVER':2,'GOLD':3};
@@ -513,6 +540,15 @@ function explain(best,tiers,cl){
   return 'Meets all active criteria for '+best.toLowerCase()+extra;
 }
 
+function renderResultTable(c){
+  const d=exportData(c);
+  const tc = d.best==='NO TIER' ? 'fail' : d.best.toLowerCase();
+  const head='<tr><th>Rank</th>'+d.labels.map(l=>`<th>${l}</th>`).join('')+'</tr>';
+  const hur='<tr><td class="hd">Hurdle</td>'+d.cells.map(cell=>`<td class="hv">${cell.text||'—'}</td>`).join('')+'</tr>';
+  const val='<tr><td class="rrk" style="color:var(--'+tc+')">'+MEDAL[d.best]+' '+d.best+'</td>'+
+    d.cells.map((cell,i)=>`<td class="pv ${cell.status}">${d.vals[i]}</td>`).join('')+'</tr>';
+  $('restab').innerHTML='<thead>'+head+'</thead><tbody>'+hur+val+'</tbody>';
+}
 function fill(sel,arr,val){ sel.innerHTML=arr.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join(''); }
 function refreshFamily(){
   const fams=DATA.platformFamilies[S.platform]||[];
@@ -584,7 +620,7 @@ function exportData(c){
   const nsVal = c.multi ? k(c.effNS)+' (worst SKU)' : (incMode ? k(c.nsInc)+' (inc)' : k(S.nsTotal||0));
   const gmVal = gmImpactMode ? nf.format(c.gmImpact)+' €' : pf(c.gmPct);
   const vals=[nsVal, gmVal, k(c.incNM)+' (Inc NM Y1)', (Math.round(c.rdRoi*10)/10)+'x', c.capexPos?'Pos ROI':'Neg ROI'];
-  const labels=['NS Y3','GM%','A&P','R&D ROI','CAPEX'];
+  const labels=[(S.pdetail==='In & Out'?'NS Y1':'NS Y3'),'GM%','A&P','R&D ROI','CAPEX'];
   const cells = disp ? tiers[disp].cells : CRITS.map(()=>({text:'—',status:'na'}));
   return {best,disp,vals,labels,cells};
 }
